@@ -82,12 +82,12 @@
 </head>
 <body>
 
-    <div id="notificacao" class="notificacao">CONEXÃO ESTABELECIDA</div>
+    <div id="notificacao" class="notificacao">SISTEMA ATUALIZADO!</div>
 
     <section id="tela-login">
         <div class="login-box">
             <h2>ACCESSS_SYSTEM</h2>
-            <input type="text" id="login-email" placeholder="E-MAIL" value="cliente@gmail.com">
+            <input type="text" id="login-email" placeholder="E-MAIL" value="empresa@phantom.com">
             <input type="password" id="login-senha" placeholder="SENHA" value="123">
             <button class="btn-login" onclick="autenticar()">INFILTRAR-SE</button>
         </div>
@@ -159,32 +159,28 @@
     </section>
 
     <script>
-        // --- CONFIGURAÇÃO RAILWAY ---
-        const URL_API = "https://phantomwearapi.onrender.com"; 
-
+        // --- CONEXÃO COM A API NO RENDER ---
+        const URL_API = "/api"; 
         let produtos = [];
         let carrinho = [];
-        let selecoesTamanho = {};
         let pedidos = [];
+        let selecoesTamanho = {};
 
         async function carregarDados() {
             try {
                 const res = await fetch(`${URL_API}/produtos`);
                 produtos = await res.json();
-                
-                // Se houver rota de pedidos no C#, carregar também
-                const resPed = await fetch(`${URL_API}/pedidos`);
-                if(resPed.ok) pedidos = await resPed.json();
-
                 renderVitrine(produtos);
                 renderAdmin();
-            } catch(e) { console.error("Erro ao conectar com a API Railway"); }
+            } catch (e) {
+                console.error("Erro ao carregar dados da API");
+            }
         }
 
         function autenticar() {
             const email = document.getElementById('login-email').value;
             document.getElementById('tela-login').classList.add('hidden');
-            if (email.includes('empresa')) {
+            if (email === "empresa@phantom.com") {
                 document.getElementById('tela-admin').classList.remove('hidden');
                 carregarDados();
             } else {
@@ -193,7 +189,6 @@
             }
         }
 
-        /* ADMIN - SYNC COM RAILWAY */
         function renderAdmin() {
             const tbody = document.getElementById('tabela-admin-corpo');
             if(!tbody) return;
@@ -208,15 +203,6 @@
                     <td class="${p.estoque <= 5 ? 'status-critico' : ''}">${p.estoque <= 5 ? 'CRÍTICO' : 'ESTÁVEL'}</td>
                 </tr>
             `).join('');
-
-            const divPed = document.getElementById('lista-pedidos-admin');
-            divPed.innerHTML = pedidos.map(p => `
-                <div class="order-card">
-                    <div><b>#${p.id}</b> - ${p.itens.map(i => i.nome).join(', ')}<br>
-                    Destino: <span style="color:#d10000">${p.endereco}</span></div>
-                    <div style="text-align:right">R$ ${p.total.toFixed(2)}</div>
-                </div>
-            `).join('');
         }
 
         async function alterarQtd(id, d) {
@@ -224,15 +210,19 @@
             const novaQtd = p.estoque + d;
             if(novaQtd < 0) return;
 
-            await fetch(`${URL_API}/produtos/${id}`, {
+            const res = await fetch(`${URL_API}/produtos/${id}`, {
                 method: 'PATCH',
-                headers: {'Content-Type': 'application/json'},
+                headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(novaQtd)
             });
-            carregarDados();
+
+            if(res.ok) {
+                p.estoque = novaQtd;
+                renderAdmin();
+                mostrarNotificacao("ESTOQUE ATUALIZADO!");
+            }
         }
 
-        /* VITRINE E CARRINHO */
         function renderVitrine(lista) {
             const v = document.getElementById('vitrine-produtos');
             if(!v) return;
@@ -267,31 +257,6 @@
             mostrarNotificacao("ADICIONADO!");
         }
 
-        async function finalizarPedido() {
-            const end = document.getElementById('campo-endereco').value;
-            if(!end || carrinho.length === 0) return;
-
-            const pedido = { 
-                itens: carrinho, 
-                endereco: end, 
-                total: carrinho.reduce((a,b)=>a+b.preco,0) 
-            };
-
-            const res = await fetch(`${URL_API}/pedidos`, {
-                method: 'POST',
-                headers: {'Content-Type': 'application/json'},
-                body: JSON.stringify(pedido)
-            });
-
-            if(res.ok) {
-                carrinho = [];
-                document.getElementById('cart-count').innerText = "0";
-                mostrarNotificacao("CONTRATO ASSINADO!");
-                await carregarDados(); 
-                voltarVitrine();
-            }
-        }
-
         function abrirCarrinho() {
             document.getElementById('vitrine-principal').style.display = 'none';
             document.getElementById('secao-carrinho').style.display = 'block';
@@ -303,14 +268,28 @@
             let total = 0;
             lista.innerHTML = carrinho.map((item) => {
                 total += item.preco;
-                return `
-                    <div class="item-carrinho">
-                        <div><b>${item.nome}</b> (${item.tamanho})</div>
-                        <div>R$ ${item.preco.toFixed(2)}</div>
-                    </div>
-                `;
+                return `<div class="item-carrinho"><div><b>${item.nome}</b> (${item.tamanho})</div><div>R$ ${item.preco.toFixed(2)}</div></div>`;
             }).join('');
             document.getElementById('resumo-total').innerText = `TOTAL: R$ ${total.toFixed(2)}`;
+        }
+
+        async function finalizarPedido() {
+            const end = document.getElementById('campo-endereco').value;
+            if(!end || carrinho.length === 0) { alert("Carrinho vazio ou sem endereço!"); return; }
+
+            const res = await fetch(`${URL_API}/pedidos`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ itens: carrinho, endereco: end, total: carrinho.reduce((a,b)=>a+b.preco,0) })
+            });
+
+            if(res.ok) {
+                carrinho = [];
+                document.getElementById('cart-count').innerText = "0";
+                mostrarNotificacao("PEDIDO REALIZADO!");
+                carregarDados();
+                voltarVitrine();
+            }
         }
 
         function filtrar(cat) {
