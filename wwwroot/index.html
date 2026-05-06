@@ -42,18 +42,18 @@
         .tab-content { display: none; }
         .tab-content.active { display: block; }
 
-        /* ESTOQUE (+) (-) */
-        .btn-qty { background: #fff; border: 2px solid #000; width: 30px; height: 30px; cursor: pointer; font-weight: bold; font-size: 18px; line-height: 1; }
-        .btn-qty:hover { background: #d10000; color: #fff; }
-        .status-critico { color: #d10000; font-weight: bold; animation: pulse 1s infinite; }
-        @keyframes pulse { 50% { opacity: 0.5; } }
+        /* ESTOQUE E BOTÃO SALVAR */
+        .btn-qty { background: #fff; border: 2px solid #000; width: 30px; height: 30px; cursor: pointer; font-weight: bold; }
+        .btn-save-stock { background: #28a745; color: #fff; border: none; padding: 5px 10px; cursor: pointer; font-weight: bold; margin-left: 10px; display: none; border: 2px solid #000; }
 
         /* TABELAS */
         .table-box { background: #1a1a1a; padding: 25px; border: 3px solid #d10000; }
         table { width: 100%; border-collapse: collapse; }
         th { text-align: left; color: #d10000; border-bottom: 3px solid #fff; padding: 12px; }
         td { padding: 12px; border-bottom: 1px solid #333; }
-        .order-card { background: #fff; color: #000; margin-bottom: 15px; padding: 15px; border-left: 10px solid #d10000; display: flex; justify-content: space-between; }
+        
+        .order-card { background: #fff; color: #000; margin-bottom: 15px; padding: 20px; border-left: 10px solid #d10000; display: flex; justify-content: space-between; align-items: center; }
+        .btn-action-order { background: #000; color: #fff; border: none; padding: 10px 15px; cursor: pointer; font-weight: 900; clip-path: polygon(10% 0, 100% 0, 90% 100%, 0 100%); }
 
         /* VITRINE */
         .vitrine-container { display: flex; padding: 20px; }
@@ -61,20 +61,13 @@
         aside li.active-filter { color: #d10000; background: #222; }
         .grid-produtos { flex-grow: 1; display: grid; grid-template-columns: repeat(3, 1fr); gap: 25px; padding-left: 25px; }
         .produto-card { background: #fff; color: #000; padding: 15px; text-align: center; border: 5px solid #000; }
-        .produto-card img { width: 100%; height: 200px; object-fit: contain; background: #eee; margin-bottom: 10px; }
+        .produto-card img { width: 100%; height: 200px; object-fit: contain; }
         
         .tamanhos-box { display: flex; justify-content: center; gap: 5px; margin: 10px 0; }
         .btn-t { border: 2px solid #000; background: #fff; font-size: 11px; cursor: pointer; padding: 5px 8px; font-weight: 900; }
         .btn-t.sel { background: #d10000; color: #fff; border-color: #d10000; }
 
-        .btn-comprar { background: #000; color: #fff; border: none; padding: 12px; width: 100%; cursor: pointer; font-weight: 900; clip-path: polygon(0 0, 100% 0, 90% 100%, 0% 100%); }
-
-        /* CARRINHO */
-        #secao-carrinho { display: none; padding: 40px; max-width: 1100px; margin: auto; }
-        .carrinho-grid { display: grid; grid-template-columns: 1.5fr 1fr; gap: 40px; }
-        .item-carrinho { display: flex; justify-content: space-between; background: #1a1a1a; padding: 20px; border-left: 8px solid #d10000; margin-bottom: 15px; }
-        .resumo-checkout { background: #fff; color: #000; padding: 30px; border: 10px solid #000; transform: rotate(-1deg); box-shadow: 15px 15px 0 #d10000; }
-        .input-endereco { width: 100%; padding: 15px; margin: 15px 0; border: 4px solid #000; font-weight: bold; box-sizing: border-box; }
+        .btn-comprar { background: #000; color: #fff; border: none; padding: 12px; width: 100%; cursor: pointer; font-weight: 900; }
 
         .notificacao { position: fixed; top: -100px; left: 50%; transform: translateX(-50%); background: #d10000; color: #fff; padding: 20px 50px; border: 4px solid #fff; z-index: 1000; transition: 0.5s; font-family: 'Persona5Menu'; text-align: center; }
         .notificacao.ativo { top: 20px; }
@@ -82,7 +75,7 @@
 </head>
 <body>
 
-    <div id="notificacao" class="notificacao">SISTEMA ATUALIZADO!</div>
+    <div id="notificacao" class="notificacao">CONEXÃO ESTABELECIDA</div>
 
     <section id="tela-login">
         <div class="login-box">
@@ -104,12 +97,10 @@
         </nav>
         <main class="admin-content">
             <div id="aba-estoque" class="tab-content active">
-                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
-                    <h1 style="color:#d10000; font-family:'Persona5Menu'; font-size:35px;">CARGA DE ITENS</h1>
-                </div>
+                <h1 style="color:#d10000; font-family:'Persona5Menu'; font-size:35px;">CARGA DE ITENS</h1>
                 <div class="table-box">
                     <table>
-                        <thead><tr><th>Produto</th><th>Categoria</th><th>Quantidade</th><th>Status</th></tr></thead>
+                        <thead><tr><th>Produto</th><th>Quantidade</th><th>Ação</th></tr></thead>
                         <tbody id="tabela-admin-corpo"></tbody>
                     </table>
                 </div>
@@ -124,12 +115,8 @@
     <section id="tela-cliente" class="hidden">
         <header>
             <div class="logo">PHANTOM WEAR</div>
-            <div style="display:flex; gap:25px; align-items:center;">
-                <div class="cart-status" onclick="abrirCarrinho()">CARRINHO [ <span id="cart-count">0</span> ]</div>
-                <button onclick="logout()" style="background:transparent; color:#fff; border:1px solid #fff; cursor:pointer; padding:5px 10px;">SAIR</button>
-            </div>
+            <div class="cart-status" onclick="abrirCarrinho()">CARRINHO [ <span id="cart-count">0</span> ]</div>
         </header>
-
         <div id="vitrine-principal" class="vitrine-container">
             <aside style="width:200px">
                 <h3 style="color:#d10000; font-family:'Persona5Menu';">FILTRAR</h3>
@@ -141,171 +128,136 @@
             </aside>
             <main class="grid-produtos" id="vitrine-produtos"></main>
         </div>
-
-        <div id="secao-carrinho">
-            <h1 style="font-family:'Persona5Menu'; color:#d10000; font-size:50px;">CHECKOUT</h1>
-            <div class="carrinho-grid">
-                <div id="itens-carrinho-lista"></div>
-                <div class="resumo-checkout">
-                    <h2 style="font-family:'Persona5Menu';">RESUMO</h2>
-                    <div id="resumo-total" style="font-size:30px; font-weight:900; margin:20px 0;">TOTAL: R$ 0,00</div>
-                    <p>ENDEREÇO DE ENTREGA:</p>
-                    <textarea id="campo-endereco" class="input-endereco" rows="3"></textarea>
-                    <button class="btn-comprar" onclick="finalizarPedido()" style="padding:20px; font-size:20px;">FINALIZAR CONTRATO</button>
-                    <p onclick="voltarVitrine()" style="text-decoration:underline; cursor:pointer; text-align:center; margin-top:20px;">VOLTAR</p>
-                </div>
-            </div>
-        </div>
     </section>
 
     <script>
-        // --- CONEXÃO COM A API NO RENDER ---
-        const URL_API = "/api"; 
+        const URL_API = "/api";
         let produtos = [];
         let carrinho = [];
-        let pedidos = [];
         let selecoesTamanho = {};
+        let alteracoesLocais = {}; // Armazena mudanças no estoque antes de salvar
 
         async function carregarDados() {
-            try {
-                const res = await fetch(`${URL_API}/produtos`);
-                produtos = await res.json();
-                renderVitrine(produtos);
-                renderAdmin();
-            } catch (e) {
-                console.error("Erro ao carregar dados da API");
-            }
+            const res = await fetch(`${URL_API}/produtos`);
+            produtos = await res.json();
+            renderVitrine(produtos);
+            renderAdmin();
         }
 
         function autenticar() {
             const email = document.getElementById('login-email').value;
             document.getElementById('tela-login').classList.add('hidden');
-            if (email === "empresa@phantom.com") {
+            if (email.includes('empresa')) {
                 document.getElementById('tela-admin').classList.remove('hidden');
-                carregarDados();
             } else {
                 document.getElementById('tela-cliente').classList.remove('hidden');
-                carregarDados();
             }
+            carregarDados();
         }
 
         function renderAdmin() {
             const tbody = document.getElementById('tabela-admin-corpo');
-            if(!tbody) return;
-            tbody.innerHTML = produtos.map(p => `
+            tbody.innerHTML = produtos.map(p => {
+                const qtd = alteracoesLocais[p.id] !== undefined ? alteracoesLocais[p.id] : p.estoque;
+                const mostrarSalvar = alteracoesLocais[p.id] !== undefined && alteracoesLocais[p.id] !== p.estoque;
+                return `
                 <tr>
-                    <td>${p.nome}</td><td>${p.cat}</td>
+                    <td>${p.nome}</td>
                     <td>
-                        <button class="btn-qty" onclick="alterarQtd(${p.id},-1)">-</button> 
-                        <span style="width:40px; display:inline-block; text-align:center; font-weight:bold;">${p.estoque}</span> 
-                        <button class="btn-qty" onclick="alterarQtd(${p.id},1)">+</button>
+                        <button class="btn-qty" onclick="ajustarLocal(${p.id}, -1)">-</button>
+                        <span style="margin:0 10px; font-weight:bold;">${qtd}</span>
+                        <button class="btn-qty" onclick="ajustarLocal(${p.id}, 1)">+</button>
+                        <button class="btn-save-stock" id="btn-save-${p.id}" style="display:${mostrarSalvar?'inline-block':'none'}" onclick="salvarEstoque(${p.id})">SALVAR</button>
                     </td>
-                    <td class="${p.estoque <= 5 ? 'status-critico' : ''}">${p.estoque <= 5 ? 'CRÍTICO' : 'ESTÁVEL'}</td>
-                </tr>
-            `).join('');
+                    <td class="${qtd <= 5 ? 'status-critico' : ''}">${qtd <= 5 ? 'CRÍTICO' : 'ESTÁVEL'}</td>
+                </tr>`;
+            }).join('');
         }
 
-        async function alterarQtd(id, d) {
-            const p = produtos.find(x => x.id === id);
-            const novaQtd = p.estoque + d;
-            if(novaQtd < 0) return;
+        function ajustarLocal(id, d) {
+            if (alteracoesLocais[id] === undefined) {
+                const p = produtos.find(x => x.id === id);
+                alteracoesLocais[id] = p.estoque;
+            }
+            alteracoesLocais[id] += d;
+            if (alteracoesLocais[id] < 0) alteracoesLocais[id] = 0;
+            renderAdmin();
+        }
 
+        async function salvarEstoque(id) {
+            const novaQtd = alteracoesLocais[id];
             const res = await fetch(`${URL_API}/produtos/${id}`, {
                 method: 'PATCH',
-                headers: { 'Content-Type': 'application/json' },
+                headers: {'Content-Type': 'application/json'},
                 body: JSON.stringify(novaQtd)
             });
-
-            if(res.ok) {
+            if (res.ok) {
+                const p = produtos.find(x => x.id === id);
                 p.estoque = novaQtd;
+                delete alteracoesLocais[id];
                 renderAdmin();
-                mostrarNotificacao("ESTOQUE ATUALIZADO!");
+                mostrarNotificacao("ESTOQUE SINCRONIZADO!");
+            }
+        }
+
+        async function mudarAba(aba) {
+            document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+            document.getElementById('aba-' + aba).classList.add('active');
+            if (aba === 'pedidos') carregarPedidos();
+        }
+
+        async function carregarPedidos() {
+            const res = await fetch(`${URL_API}/pedidos`);
+            const pedidos = await res.json();
+            const div = document.getElementById('lista-pedidos-admin');
+            div.innerHTML = pedidos.map(p => `
+                <div class="order-card">
+                    <div><b>ID #${p.id}</b> | Status: ${p.status}<br><small>${p.itens.map(i=>i.nome).join(', ')}</small></div>
+                    <div>
+                        ${p.status === 'PENDENTE' ? `<button class="btn-action-order" onclick="darBaixa(${p.id})">ENVIAR E BAIXAR</button>` : 'ENVIADO'}
+                    </div>
+                </div>`).join('');
+        }
+
+        async function darBaixa(id) {
+            const res = await fetch(`${URL_API}/pedidos/${id}/entregar`, { method: 'POST' });
+            if (res.ok) {
+                mostrarNotificacao("PEDIDO ENVIADO!");
+                carregarPedidos();
+                carregarDados();
             }
         }
 
         function renderVitrine(lista) {
             const v = document.getElementById('vitrine-produtos');
-            if(!v) return;
             v.innerHTML = lista.map(p => `
                 <div class="produto-card">
-                    <img src="${p.img}" alt="${p.nome}" onerror="this.src='https://via.placeholder.com/200x200?text=Produto'">
+                    <img src="${p.img}">
                     <h4>${p.nome}</h4>
                     <p>R$ ${p.preco.toFixed(2)}</p>
-                    <div class="tamanhos-box" id="tams-${p.id}">
-                        <button class="btn-t" onclick="setTam(${p.id}, 'P', this)">P</button>
-                        <button class="btn-t" onclick="setTam(${p.id}, 'M', this)">M</button>
-                        <button class="btn-t" onclick="setTam(${p.id}, 'G', this)">G</button>
-                    </div>
-                    <button class="btn-comprar" ${p.estoque === 0 ? 'disabled style="background:#555"' : ''} onclick="addCarrinho(${p.id})">
-                        ${p.estoque === 0 ? 'ESGOTADO' : 'ADICIONAR'}
-                    </button>
-                </div>
-            `).join('');
-        }
-
-        function setTam(id, tam, btn) {
-            selecoesTamanho[id] = tam;
-            document.getElementById('tams-'+id).querySelectorAll('.btn-t').forEach(b => b.classList.remove('sel'));
-            btn.classList.add('sel');
+                    <button class="btn-comprar" onclick="addCarrinho(${p.id})">ADICIONAR</button>
+                </div>`).join('');
         }
 
         function addCarrinho(id) {
-            if(!selecoesTamanho[id]) { alert("Escolha o tamanho!"); return; }
             const p = produtos.find(x => x.id === id);
-            carrinho.push({ ...p, tamanho: selecoesTamanho[id], cartId: Date.now() });
+            carrinho.push(p);
             document.getElementById('cart-count').innerText = carrinho.length;
             mostrarNotificacao("ADICIONADO!");
         }
 
-        function abrirCarrinho() {
-            document.getElementById('vitrine-principal').style.display = 'none';
-            document.getElementById('secao-carrinho').style.display = 'block';
-            renderItensCarrinho();
-        }
-
-        function renderItensCarrinho() {
-            const lista = document.getElementById('itens-carrinho-lista');
-            let total = 0;
-            lista.innerHTML = carrinho.map((item) => {
-                total += item.preco;
-                return `<div class="item-carrinho"><div><b>${item.nome}</b> (${item.tamanho})</div><div>R$ ${item.preco.toFixed(2)}</div></div>`;
-            }).join('');
-            document.getElementById('resumo-total').innerText = `TOTAL: R$ ${total.toFixed(2)}`;
-        }
-
         async function finalizarPedido() {
-            const end = document.getElementById('campo-endereco').value;
-            if(!end || carrinho.length === 0) { alert("Carrinho vazio ou sem endereço!"); return; }
-
+            const end = prompt("Digite o endereço de entrega:");
+            if(!end) return;
             const res = await fetch(`${URL_API}/pedidos`, {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ itens: carrinho, endereco: end, total: carrinho.reduce((a,b)=>a+b.preco,0) })
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({ itens: carrinho, endereco: end, total: 0 })
             });
-
-            if(res.ok) {
-                carrinho = [];
-                document.getElementById('cart-count').innerText = "0";
-                mostrarNotificacao("PEDIDO REALIZADO!");
-                carregarDados();
-                voltarVitrine();
+            if (res.ok) {
+                alert("Contrato assinado! Aguarde envio.");
+                location.reload();
             }
-        }
-
-        function filtrar(cat) {
-            const f = cat === 'TODOS' ? produtos : produtos.filter(p => p.cat === cat);
-            renderVitrine(f);
-        }
-
-        function mudarAba(aba) {
-            document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
-            document.getElementById('aba-' + aba).classList.add('active');
-            renderAdmin();
-        }
-
-        function voltarVitrine() {
-            document.getElementById('vitrine-principal').style.display = 'flex';
-            document.getElementById('secao-carrinho').style.display = 'none';
         }
 
         function mostrarNotificacao(texto) {
