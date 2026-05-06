@@ -36,7 +36,7 @@ var pedidos = new List<Pedido>();
 app.MapGet("/api/produtos", () => produtos);
 app.MapGet("/api/pedidos", () => pedidos);
 
-// Cliente cria o pedido (Status inicial: Pendente)
+// Cliente cria o pedido (Status inicial: PENDENTE)
 app.MapPost("/api/pedidos", (Pedido novoPedido) => {
     novoPedido.Id = pedidos.Count + 1001;
     novoPedido.Status = "PENDENTE";
@@ -44,7 +44,7 @@ app.MapPost("/api/pedidos", (Pedido novoPedido) => {
     return Results.Ok(novoPedido);
 });
 
-// Admin envia para entrega e dá baixa no estoque
+// Admin envia para entrega e dá baixa no estoque REAL
 app.MapPost("/api/pedidos/{id}/entregar", (int id) => {
     var pedido = pedidos.FirstOrDefault(p => p.Id == id);
     if (pedido == null || pedido.Status != "PENDENTE") return Results.BadRequest("Pedido não encontrado ou já enviado.");
@@ -55,10 +55,10 @@ app.MapPost("/api/pedidos/{id}/entregar", (int id) => {
     }
 
     pedido.Status = "ENVIADO";
-    return Results.Ok(new { mensagem = "Estoque atualizado e pedido enviado!", pedido });
+    return Results.Ok(new { mensagem = "Estoque atualizado!", pedido });
 });
 
-// Atualização manual do estoque (Botão Salvar)
+// Atualização manual via botão SALVAR
 app.MapPatch("/api/produtos/{id}", (int id, [FromBody] int novaQtd) => {
     var p = produtos.FirstOrDefault(x => x.Id == id);
     if (p == null) return Results.NotFound();
