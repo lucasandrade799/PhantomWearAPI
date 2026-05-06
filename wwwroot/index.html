@@ -5,12 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Phantom Wear | Final Ultimate System</title>
     <style>
-        @font-face {
-            font-family: 'Persona5Menu';
-            src: url('Persona5MenuFontPrototype-Regular.ttf') format('truetype');
-        }
-
-        /* ESTILOS BASE */
+        @font-face { font-family: 'Persona5Menu'; src: url('Persona5MenuFontPrototype-Regular.ttf') format('truetype'); }
         body { font-family: 'Arial Black', sans-serif; background-color: #000; color: #fff; margin: 0; overflow-x: hidden; }
         .hidden { display: none !important; }
 
@@ -24,41 +19,26 @@
         /* HEADER CLIENTE */
         header { background: #d10000; padding: 15px 40px; display: flex; justify-content: space-between; border-bottom: 5px solid #fff; position: sticky; top: 0; z-index: 100; align-items: center; }
         .logo { font-family: 'Persona5Menu', sans-serif; font-size: 28px; background: #000; padding: 5px 15px; border: 2px solid #fff; transform: rotate(-2deg); }
-        
-        .cart-status { 
-            cursor: pointer; background: #fff; color: #000; padding: 10px 25px; font-weight: 900; 
-            clip-path: polygon(15% 0, 100% 0, 85% 100%, 0 100%); 
-            transition: 0.3s; transform: skewX(-10deg); border: 2px solid #000;
-        }
+        .cart-status { cursor: pointer; background: #fff; color: #000; padding: 10px 25px; font-weight: 900; clip-path: polygon(15% 0, 100% 0, 85% 100%, 0 100%); transform: skewX(-10deg); border: 2px solid #000; }
 
         /* ADMIN */
         #tela-admin { display: flex; min-height: 100vh; }
         nav { width: 260px; background: #d10000; border-right: 5px solid #fff; position: fixed; height: 100vh; z-index: 10; }
-        .admin-logo { font-family: 'Persona5Menu', sans-serif; font-size: 26px; padding: 25px; background: #000; margin: 15px; border: 2px solid #fff; transform: rotate(-3deg); }
-        nav ul { list-style: none; padding: 0; }
-        nav li { padding: 20px; cursor: pointer; border-bottom: 1px solid rgba(255,255,255,0.2); text-transform: uppercase; }
-        nav li:hover, nav li.active-tab { background: #fff; color: #d10000; font-weight: 900; padding-left: 30px; }
         main.admin-content { flex-grow: 1; padding: 50px; margin-left: 260px; }
         .tab-content { display: none; }
         .tab-content.active { display: block; }
+        nav li { padding: 20px; cursor: pointer; border-bottom: 1px solid rgba(255,255,255,0.2); text-transform: uppercase; }
+        nav li.active-tab { background: #fff; color: #d10000; font-weight: 900; }
 
-        /* ESTOQUE E BOTÃO SALVAR */
+        /* ESTOQUE E BOTÕES */
         .btn-qty { background: #fff; border: 2px solid #000; width: 30px; height: 30px; cursor: pointer; font-weight: bold; }
-        .btn-save-stock { background: #28a745; color: #fff; border: none; padding: 5px 10px; cursor: pointer; font-weight: bold; margin-left: 10px; display: none; border: 2px solid #000; }
-
-        /* TABELAS */
-        .table-box { background: #1a1a1a; padding: 25px; border: 3px solid #d10000; }
-        table { width: 100%; border-collapse: collapse; }
-        th { text-align: left; color: #d10000; border-bottom: 3px solid #fff; padding: 12px; }
-        td { padding: 12px; border-bottom: 1px solid #333; }
+        .btn-save-stock { background: #28a745; color: #fff; border: none; padding: 5px 10px; cursor: pointer; display: none; border: 2px solid #000; margin-left: 10px; }
         
         .order-card { background: #fff; color: #000; margin-bottom: 15px; padding: 20px; border-left: 10px solid #d10000; display: flex; justify-content: space-between; align-items: center; }
-        .btn-action-order { background: #000; color: #fff; border: none; padding: 10px 15px; cursor: pointer; font-weight: 900; clip-path: polygon(10% 0, 100% 0, 90% 100%, 0 100%); }
+        .btn-entregar { background: #000; color: #fff; border: none; padding: 10px 20px; cursor: pointer; font-weight: 900; clip-path: polygon(10% 0, 100% 0, 90% 100%, 0 100%); }
 
-        /* VITRINE */
+        /* VITRINE E CARRINHO */
         .vitrine-container { display: flex; padding: 20px; }
-        aside li { padding: 15px; cursor: pointer; border-bottom: 1px solid #333; }
-        aside li.active-filter { color: #d10000; background: #222; }
         .grid-produtos { flex-grow: 1; display: grid; grid-template-columns: repeat(3, 1fr); gap: 25px; padding-left: 25px; }
         .produto-card { background: #fff; color: #000; padding: 15px; text-align: center; border: 5px solid #000; }
         .produto-card img { width: 100%; height: 200px; object-fit: contain; }
@@ -66,20 +46,24 @@
         .tamanhos-box { display: flex; justify-content: center; gap: 5px; margin: 10px 0; }
         .btn-t { border: 2px solid #000; background: #fff; font-size: 11px; cursor: pointer; padding: 5px 8px; font-weight: 900; }
         .btn-t.sel { background: #d10000; color: #fff; border-color: #d10000; }
-
         .btn-comprar { background: #000; color: #fff; border: none; padding: 12px; width: 100%; cursor: pointer; font-weight: 900; }
 
-        .notificacao { position: fixed; top: -100px; left: 50%; transform: translateX(-50%); background: #d10000; color: #fff; padding: 20px 50px; border: 4px solid #fff; z-index: 1000; transition: 0.5s; font-family: 'Persona5Menu'; text-align: center; }
+        #secao-carrinho { padding: 40px; max-width: 1100px; margin: auto; }
+        .carrinho-grid { display: grid; grid-template-columns: 1.5fr 1fr; gap: 40px; }
+        .resumo-checkout { background: #fff; color: #000; padding: 30px; border: 10px solid #000; box-shadow: 15px 15px 0 #d10000; }
+        .input-endereco { width: 100%; padding: 15px; margin: 15px 0; border: 4px solid #000; font-weight: bold; box-sizing: border-box; }
+
+        .notificacao { position: fixed; top: -100px; left: 50%; transform: translateX(-50%); background: #d10000; color: #fff; padding: 20px 50px; border: 4px solid #fff; z-index: 1000; transition: 0.5s; font-family: 'Persona5Menu'; }
         .notificacao.ativo { top: 20px; }
     </style>
 </head>
 <body>
 
-    <div id="notificacao" class="notificacao">CONEXÃO ESTABELECIDA</div>
+    <div id="notificacao" class="notificacao">SISTEMA PHANTOM</div>
 
     <section id="tela-login">
         <div class="login-box">
-            <h2>ACCESSS_SYSTEM</h2>
+            <h2>ACCESS_LOGIN</h2>
             <input type="text" id="login-email" placeholder="E-MAIL" value="empresa@phantom.com">
             <input type="password" id="login-senha" placeholder="SENHA" value="123">
             <button class="btn-login" onclick="autenticar()">INFILTRAR-SE</button>
@@ -88,25 +72,25 @@
 
     <section id="tela-admin" class="hidden">
         <nav>
-            <div class="admin-logo">PHANTOM ADMIN</div>
+            <div style="padding:20px; background:#000; color:#fff; font-family:'Persona5Menu';">PHANTOM ADMIN</div>
             <ul>
                 <li id="li-estoque" class="active-tab" onclick="mudarAba('estoque')">Estoque</li>
                 <li id="li-pedidos" onclick="mudarAba('pedidos')">Pedidos</li>
-                <li onclick="logout()">Sair</li>
+                <li onclick="location.reload()">Sair</li>
             </ul>
         </nav>
         <main class="admin-content">
             <div id="aba-estoque" class="tab-content active">
-                <h1 style="color:#d10000; font-family:'Persona5Menu'; font-size:35px;">CARGA DE ITENS</h1>
-                <div class="table-box">
+                <h1 style="color:#d10000; font-family:'Persona5Menu';">CONTROLE DE CARGA</h1>
+                <div style="background:#1a1a1a; padding:25px; border:3px solid #d10000;">
                     <table>
-                        <thead><tr><th>Produto</th><th>Quantidade</th><th>Ação</th></tr></thead>
+                        <thead><tr><th>Item</th><th>Quantidade</th><th>Status</th></tr></thead>
                         <tbody id="tabela-admin-corpo"></tbody>
                     </table>
                 </div>
             </div>
             <div id="aba-pedidos" class="tab-content">
-                <h1 style="color:#d10000; font-family:'Persona5Menu'; font-size:35px;">CONTRATOS ATIVOS</h1>
+                <h1 style="color:#d10000; font-family:'Persona5Menu';">CONTRATOS</h1>
                 <div id="lista-pedidos-admin"></div>
             </div>
         </main>
@@ -121,12 +105,27 @@
             <aside style="width:200px">
                 <h3 style="color:#d10000; font-family:'Persona5Menu';">FILTRAR</h3>
                 <ul style="list-style:none; padding:0">
-                    <li onclick="filtrar('TODOS')" class="active-filter">TODOS</li>
-                    <li onclick="filtrar('Camiseta')">CAMISETAS</li>
-                    <li onclick="filtrar('Moletom')">MOLETONS</li>
+                    <li onclick="filtrar('TODOS')" style="cursor:pointer; padding:10px;">TODOS</li>
+                    <li onclick="filtrar('Camiseta')" style="cursor:pointer; padding:10px;">CAMISETAS</li>
+                    <li onclick="filtrar('Moletom')" style="cursor:pointer; padding:10px;">MOLETONS</li>
                 </ul>
             </aside>
             <main class="grid-produtos" id="vitrine-produtos"></main>
+        </div>
+
+        <div id="secao-carrinho" class="hidden">
+            <h1 style="font-family:'Persona5Menu'; color:#d10000; font-size:50px;">CHECKOUT</h1>
+            <div class="carrinho-grid">
+                <div id="itens-carrinho-lista"></div>
+                <div class="resumo-checkout">
+                    <h2 style="font-family:'Persona5Menu';">RESUMO</h2>
+                    <div id="resumo-total" style="font-size:30px; font-weight:900; margin:20px 0;">TOTAL: R$ 0,00</div>
+                    <p>ENDEREÇO DE ENTREGA:</p>
+                    <textarea id="campo-endereco" class="input-endereco" rows="3"></textarea>
+                    <button class="btn-comprar" onclick="finalizarPedido()" style="padding:20px;">FINALIZAR CONTRATO</button>
+                    <p onclick="voltarVitrine()" style="text-decoration:underline; cursor:pointer; text-align:center; margin-top:20px;">VOLTAR</p>
+                </div>
+            </div>
         </div>
     </section>
 
@@ -135,7 +134,7 @@
         let produtos = [];
         let carrinho = [];
         let selecoesTamanho = {};
-        let alteracoesLocais = {}; // Armazena mudanças no estoque antes de salvar
+        let mudancasLocais = {};
 
         async function carregarDados() {
             const res = await fetch(`${URL_API}/produtos`);
@@ -155,79 +154,75 @@
             carregarDados();
         }
 
+        /* ADMIN - ESTOQUE */
         function renderAdmin() {
             const tbody = document.getElementById('tabela-admin-corpo');
             tbody.innerHTML = produtos.map(p => {
-                const qtd = alteracoesLocais[p.id] !== undefined ? alteracoesLocais[p.id] : p.estoque;
-                const mostrarSalvar = alteracoesLocais[p.id] !== undefined && alteracoesLocais[p.id] !== p.estoque;
+                const qtdMostrada = mudancasLocais[p.id] !== undefined ? mudancasLocais[p.id] : p.estoque;
+                const mudou = mudancasLocais[p.id] !== undefined && mudancasLocais[p.id] !== p.estoque;
                 return `
                 <tr>
                     <td>${p.nome}</td>
                     <td>
                         <button class="btn-qty" onclick="ajustarLocal(${p.id}, -1)">-</button>
-                        <span style="margin:0 10px; font-weight:bold;">${qtd}</span>
+                        <span style="margin:0 10px; font-weight:bold;">${qtdMostrada}</span>
                         <button class="btn-qty" onclick="ajustarLocal(${p.id}, 1)">+</button>
-                        <button class="btn-save-stock" id="btn-save-${p.id}" style="display:${mostrarSalvar?'inline-block':'none'}" onclick="salvarEstoque(${p.id})">SALVAR</button>
+                        <button class="btn-save-stock" id="save-${p.id}" style="display:${mudou?'inline-block':'none'}" onclick="salvarEstoque(${p.id})">SALVAR</button>
                     </td>
-                    <td class="${qtd <= 5 ? 'status-critico' : ''}">${qtd <= 5 ? 'CRÍTICO' : 'ESTÁVEL'}</td>
+                    <td style="color:${qtdMostrada<=5?'#d10000':'#fff'}">${qtdMostrada<=5?'CRÍTICO':'OK'}</td>
                 </tr>`;
             }).join('');
         }
 
         function ajustarLocal(id, d) {
-            if (alteracoesLocais[id] === undefined) {
-                const p = produtos.find(x => x.id === id);
-                alteracoesLocais[id] = p.estoque;
-            }
-            alteracoesLocais[id] += d;
-            if (alteracoesLocais[id] < 0) alteracoesLocais[id] = 0;
+            if (mudancasLocais[id] === undefined) mudancasLocais[id] = produtos.find(x => x.id === id).estoque;
+            mudancasLocais[id] += d;
+            if (mudancasLocais[id] < 0) mudancasLocais[id] = 0;
             renderAdmin();
         }
 
         async function salvarEstoque(id) {
-            const novaQtd = alteracoesLocais[id];
             const res = await fetch(`${URL_API}/produtos/${id}`, {
                 method: 'PATCH',
                 headers: {'Content-Type': 'application/json'},
-                body: JSON.stringify(novaQtd)
+                body: JSON.stringify(mudancasLocais[id])
             });
             if (res.ok) {
-                const p = produtos.find(x => x.id === id);
-                p.estoque = novaQtd;
-                delete alteracoesLocais[id];
+                produtos.find(x => x.id === id).estoque = mudancasLocais[id];
+                delete mudancasLocais[id];
                 renderAdmin();
-                mostrarNotificacao("ESTOQUE SINCRONIZADO!");
+                mostrarNotificacao("ESTOQUE SALVO!");
             }
         }
 
+        /* ADMIN - PEDIDOS */
         async function mudarAba(aba) {
             document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+            document.querySelectorAll('nav li').forEach(l => l.classList.remove('active-tab'));
             document.getElementById('aba-' + aba).classList.add('active');
+            document.getElementById('li-' + aba).classList.add('active-tab');
             if (aba === 'pedidos') carregarPedidos();
         }
 
         async function carregarPedidos() {
             const res = await fetch(`${URL_API}/pedidos`);
-            const pedidos = await res.json();
+            const peds = await res.json();
             const div = document.getElementById('lista-pedidos-admin');
-            div.innerHTML = pedidos.map(p => `
+            div.innerHTML = peds.map(p => `
                 <div class="order-card">
-                    <div><b>ID #${p.id}</b> | Status: ${p.status}<br><small>${p.itens.map(i=>i.nome).join(', ')}</small></div>
-                    <div>
-                        ${p.status === 'PENDENTE' ? `<button class="btn-action-order" onclick="darBaixa(${p.id})">ENVIAR E BAIXAR</button>` : 'ENVIADO'}
-                    </div>
+                    <div><b>#${p.id}</b> - ${p.status}<br><small>${p.itens.map(i=>i.nome).join(', ')}</small><br>${p.endereco}</div>
+                    <div>${p.status === 'PENDENTE' ? `<button class="btn-entregar" onclick="baixarPedido(${p.id})">ENVIAR E BAIXAR</button>` : 'ENVIADO'}</div>
                 </div>`).join('');
         }
 
-        async function darBaixa(id) {
-            const res = await fetch(`${URL_API}/pedidos/${id}/entregar`, { method: 'POST' });
-            if (res.ok) {
-                mostrarNotificacao("PEDIDO ENVIADO!");
-                carregarPedidos();
-                carregarDados();
-            }
+        async function baixarPedido(id) {
+            await fetch(`${URL_API}/pedidos/${id}/entregar`, { method: 'POST' });
+            mostrarNotificacao("BAIXA REALIZADA!");
+            carregarPedidos();
+            carregarDados();
         }
 
+        /* VITRINE E TAMANHOS */
         function renderVitrine(lista) {
             const v = document.getElementById('vitrine-produtos');
             v.innerHTML = lista.map(p => `
@@ -235,29 +230,57 @@
                     <img src="${p.img}">
                     <h4>${p.nome}</h4>
                     <p>R$ ${p.preco.toFixed(2)}</p>
+                    <div class="tamanhos-box" id="tams-${p.id}">
+                        <button class="btn-t" onclick="setTam(${p.id}, 'P', this)">P</button>
+                        <button class="btn-t" onclick="setTam(${p.id}, 'M', this)">M</button>
+                        <button class="btn-t" onclick="setTam(${p.id}, 'G', this)">G</button>
+                    </div>
                     <button class="btn-comprar" onclick="addCarrinho(${p.id})">ADICIONAR</button>
                 </div>`).join('');
         }
 
+        function setTam(id, tam, btn) {
+            selecoesTamanho[id] = tam;
+            document.getElementById('tams-'+id).querySelectorAll('.btn-t').forEach(b => b.classList.remove('sel'));
+            btn.classList.add('sel');
+        }
+
         function addCarrinho(id) {
+            if(!selecoesTamanho[id]) return alert("Escolha o tamanho!");
             const p = produtos.find(x => x.id === id);
-            carrinho.push(p);
+            carrinho.push({...p, tam: selecoesTamanho[id]});
             document.getElementById('cart-count').innerText = carrinho.length;
             mostrarNotificacao("ADICIONADO!");
         }
 
+        function abrirCarrinho() {
+            document.getElementById('vitrine-principal').classList.add('hidden');
+            document.getElementById('secao-carrinho').classList.remove('hidden');
+            const lista = document.getElementById('itens-carrinho-lista');
+            lista.innerHTML = carrinho.map(i => `<div style="background:#1a1a1a; padding:15px; margin-bottom:10px; border-left:5px solid #d10000;">${i.nome} (${i.tam}) - R$ ${i.preco.toFixed(2)}</div>`).join('');
+            const total = carrinho.reduce((a,b)=>a+b.preco, 0);
+            document.getElementById('resumo-total').innerText = `TOTAL: R$ ${total.toFixed(2)}`;
+        }
+
         async function finalizarPedido() {
-            const end = prompt("Digite o endereço de entrega:");
-            if(!end) return;
+            const end = document.getElementById('campo-endereco').value;
+            if(!end || carrinho.length === 0) return alert("Erro no checkout!");
             const res = await fetch(`${URL_API}/pedidos`, {
                 method: 'POST',
                 headers: {'Content-Type': 'application/json'},
-                body: JSON.stringify({ itens: carrinho, endereco: end, total: 0 })
+                body: JSON.stringify({ itens: carrinho, endereco: end, total: carrinho.reduce((a,b)=>a+b.preco,0) })
             });
-            if (res.ok) {
-                alert("Contrato assinado! Aguarde envio.");
-                location.reload();
-            }
+            if(res.ok) { alert("Contrato Realizado!"); location.reload(); }
+        }
+
+        function filtrar(cat) {
+            const f = cat === 'TODOS' ? produtos : produtos.filter(p => p.cat === cat);
+            renderVitrine(f);
+        }
+
+        function voltarVitrine() {
+            document.getElementById('vitrine-principal').classList.remove('hidden');
+            document.getElementById('secao-carrinho').classList.add('hidden');
         }
 
         function mostrarNotificacao(texto) {
@@ -265,8 +288,6 @@
             n.innerText = texto; n.classList.add('ativo');
             setTimeout(() => n.classList.remove('ativo'), 2000);
         }
-
-        function logout() { location.reload(); }
     </script>
 </body>
 </html>
