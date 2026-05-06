@@ -2,15 +2,23 @@ using Microsoft.AspNetCore.Mvc;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Habilita CORS para o HTML acessar a API de qualquer lugar
+// CONFIGURAÇÃO PARA O RENDER: Deteta a porta dinamicamente
+var port = Environment.GetEnvironmentVariable("PORT") ?? "8080";
+builder.WebHost.UseUrls($"http://0.0.0.0:{port}");
+
+// Habilita CORS para o HTML aceder à API de qualquer lugar
 builder.Services.AddCors(options => {
     options.AddDefaultPolicy(policy => policy.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod());
 });
 
 var app = builder.Build();
+
+// Permite servir o index.html e imagens da pasta wwwroot
+app.UseDefaultFiles();
+app.UseStaticFiles();
 app.UseCors();
 
-// Banco de dados em memória (Reinicia ao resetar o servidor no Railway)
+// Banco de dados em memória (Reinicia se o Render "dormir")
 var produtos = new List<Produto> {
     new Produto { Id = 1, Nome = "Camiseta Branca - Gorillaz", Cat = "Camiseta", Preco = 89.90m, Estoque = 20, Img = "camiseta_demondays.png" },
     new Produto { Id = 2, Nome = "Moletom Branco - Gojo", Cat = "Moletom", Preco = 189.90m, Estoque = 3, Img = "moletom_gojo.png" },
@@ -26,12 +34,10 @@ var produtos = new List<Produto> {
 
 var pedidos = new List<Pedido>();
 
-// --- ROTAS ---
+// --- ROTAS API ---
 
-// Listar produtos
 app.MapGet("/api/produtos", () => produtos);
 
-// Criar Pedido com BAIXA AUTOMÁTICA
 app.MapPost("/api/pedidos", (Pedido novoPedido) => {
     foreach (var item in novoPedido.Itens) {
         var p = produtos.FirstOrDefault(x => x.Id == item.Id);
@@ -42,7 +48,6 @@ app.MapPost("/api/pedidos", (Pedido novoPedido) => {
     return Results.Ok(new { mensagem = "Sucesso!", pedido = novoPedido });
 });
 
-// Atualizar Estoque Manualmente (Admin)
 app.MapPatch("/api/produtos/{id}", (int id, [FromBody] int novaQtd) => {
     var p = produtos.FirstOrDefault(x => x.Id == id);
     if (p == null) return Results.NotFound();
