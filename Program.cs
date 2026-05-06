@@ -2,23 +2,20 @@ using Microsoft.AspNetCore.Mvc;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// CONFIGURAÇÃO PARA O RENDER: Deteta a porta dinamicamente
+// Configuração de Porta para o Render
 var port = Environment.GetEnvironmentVariable("PORT") ?? "8080";
 builder.WebHost.UseUrls($"http://0.0.0.0:{port}");
 
-// Habilita CORS para o HTML aceder à API de qualquer lugar
 builder.Services.AddCors(options => {
     options.AddDefaultPolicy(policy => policy.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod());
 });
 
 var app = builder.Build();
-
-// Permite servir o index.html e imagens da pasta wwwroot
 app.UseDefaultFiles();
 app.UseStaticFiles();
 app.UseCors();
 
-// Banco de dados em memória (Reinicia se o Render "dormir")
+// Banco de dados em memória
 var produtos = new List<Produto> {
     new Produto { Id = 1, Nome = "Camiseta Branca - Gorillaz", Cat = "Camiseta", Preco = 89.90m, Estoque = 20, Img = "camiseta_demondays.png" },
     new Produto { Id = 2, Nome = "Moletom Branco - Gojo", Cat = "Moletom", Preco = 189.90m, Estoque = 3, Img = "moletom_gojo.png" },
@@ -37,17 +34,31 @@ var pedidos = new List<Pedido>();
 // --- ROTAS API ---
 
 app.MapGet("/api/produtos", () => produtos);
+app.MapGet("/api/pedidos", () => pedidos);
 
+// Cliente cria o pedido (Status inicial: Pendente)
 app.MapPost("/api/pedidos", (Pedido novoPedido) => {
-    foreach (var item in novoPedido.Itens) {
-        var p = produtos.FirstOrDefault(x => x.Id == item.Id);
-        if (p != null && p.Estoque > 0) p.Estoque--;
-    }
     novoPedido.Id = pedidos.Count + 1001;
+    novoPedido.Status = "PENDENTE";
     pedidos.Add(novoPedido);
-    return Results.Ok(new { mensagem = "Sucesso!", pedido = novoPedido });
+    return Results.Ok(novoPedido);
 });
 
+// Admin envia para entrega e dá baixa no estoque
+app.MapPost("/api/pedidos/{id}/entregar", (int id) => {
+    var pedido = pedidos.FirstOrDefault(p => p.Id == id);
+    if (pedido == null || pedido.Status != "PENDENTE") return Results.BadRequest("Pedido não encontrado ou já enviado.");
+
+    foreach (var item in pedido.Itens) {
+        var p = produtos.FirstOrDefault(x => x.Id == item.Id);
+        if (p != null) p.Estoque = Math.Max(0, p.Estoque - 1);
+    }
+
+    pedido.Status = "ENVIADO";
+    return Results.Ok(new { mensagem = "Estoque atualizado e pedido enviado!", pedido });
+});
+
+// Atualização manual do estoque (Botão Salvar)
 app.MapPatch("/api/produtos/{id}", (int id, [FromBody] int novaQtd) => {
     var p = produtos.FirstOrDefault(x => x.Id == id);
     if (p == null) return Results.NotFound();
@@ -57,7 +68,6 @@ app.MapPatch("/api/produtos/{id}", (int id, [FromBody] int novaQtd) => {
 
 app.Run();
 
-// --- MODELOS ---
 public class Produto {
     public int Id { get; set; }
     public string Nome { get; set; } = "";
@@ -72,4 +82,5 @@ public class Pedido {
     public List<Produto> Itens { get; set; } = new();
     public string Endereco { get; set; } = "";
     public decimal Total { get; set; }
+    public string Status { get; set; } = "PENDENTE";
 }
