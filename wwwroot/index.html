@@ -154,7 +154,7 @@
             carregarDados();
         }
 
-        /* ADMIN - ESTOQUE */
+        /* ADMIN - ESTOQUE ATUALIZADO COM IMAGENS */
         function renderAdmin() {
             const tbody = document.getElementById('tabela-admin-corpo');
             tbody.innerHTML = produtos.map(p => {
@@ -162,7 +162,10 @@
                 const mudou = mudancasLocais[p.id] !== undefined && mudancasLocais[p.id] !== p.estoque;
                 return `
                 <tr>
-                    <td>${p.nome}</td>
+                    <td style="display: flex; align-items: center; gap: 15px;">
+                        <img src="${p.img}" alt="${p.nome}" style="width: 40px; height: 40px; object-fit: contain; background: #eee; border: 2px solid #000;" onerror="this.src='https://via.placeholder.com/40x40?text=Item'">
+                        <span>${p.nome}</span>
+                    </td>
                     <td>
                         <button class="btn-qty" onclick="ajustarLocal(${p.id}, -1)">-</button>
                         <span style="margin:0 10px; font-weight:bold;">${qtdMostrada}</span>
