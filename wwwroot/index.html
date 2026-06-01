@@ -83,6 +83,9 @@
         input:checked + .slider:before { transform: translateX(24px); background-color: #fff; }
 
         .p5-info-box { background: #000; color: #fff; padding: 10px; font-size: 11px; font-family: sans-serif; font-weight: bold; line-height: 1.4; clip-path: polygon(0 0, 100% 5%, 95% 100%, 3% 95%); }
+
+        /* Força o VLibras a começar invisível até ser ligado */
+        #vlibras-container { display: none; }
     </style>
 </head>
 <body>
@@ -107,7 +110,14 @@
         </div>
     </div>
 
-    <div id="vlibras-container"></div>
+    <div id="vlibras-container">
+        <div vw class="enabled">
+            <div vw-access-button class="active"></div>
+            <div vw-plugin-wrapper>
+                <div class="vw-plugin-top-wrapper"></div>
+            </div>
+        </div>
+    </div>
 
     <section id="tela-login">
         <div class="login-box">
@@ -177,15 +187,20 @@
         </div>
     </section>
 
+    <script src="https://vlibras.gov.br/app/vlibras-plugin.js"></script>
+    <script>
+        // Inicializa o widget globalmente em segundo plano
+        new window.VLibras.Widget('https://vlibras.gov.br/app');
+    </script>
+
     <script>
         const URL_API = "/api";
         let produtos = [];
         let carrinho = [];
         let selecoesTamanho = {};
         let mudancasLocais = {};
-        let vlibrasInstanciado = false;
 
-        /* INTERRUPTORES DO COMPONENTE FLUTUANTE */
+        /* CONTROLADORES VISUAIS DA ACESSIBILIDADE */
         function togglePainelAcessivel() {
             document.getElementById('painel-libras').classList.toggle('aberto');
         }
@@ -195,29 +210,10 @@
             const container = document.getElementById('vlibras-container');
             
             if (ativo) {
-                // Injeta a marcação que o script do Governo Federal necessita para renderizar o boneco
-                container.innerHTML = `
-                    <div vw class="enabled">
-                        <div vw-access-button class="active"></div>
-                        <div vw-plugin-wrapper>
-                            <div class="vw-plugin-top-wrapper"></div>
-                        </div>
-                    </div>`;
-                
-                if (!vlibrasInstanciado) {
-                    const script = document.createElement('script');
-                    script.src = "https://vlibras.gov.br/app/vlibras-plugin.js";
-                    script.onload = () => {
-                        new window.VLibras.Widget('https://vlibras.gov.br/app');
-                        vlibrasInstanciado = true;
-                    };
-                    document.body.appendChild(script);
-                } else {
-                    new window.VLibras.Widget('https://vlibras.gov.br/app');
-                }
+                container.style.display = "block"; // Revela o boneco na interface
                 mostrarNotificacao("VLIBRAS ATIVADO!");
             } else {
-                container.innerHTML = ""; // Esvazia o container para remover o boneco completamente da interface
+                container.style.display = "none";  // Oculta o boneco completamente
                 mostrarNotificacao("VLIBRAS DESATIVADO");
             }
         }
@@ -240,7 +236,7 @@
             carregarDados();
         }
 
-        /* ADMIN - ESTOQUE ATUALIZADO COM MINI IMAGENS */
+        /* ADMIN - ESTOQUE COM MINI IMAGENS */
         function renderAdmin() {
             const tbody = document.getElementById('tabela-admin-corpo');
             tbody.innerHTML = produtos.map(p => {
