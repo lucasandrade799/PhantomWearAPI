@@ -56,7 +56,7 @@
         .notificacao { position: fixed; top: -100px; left: 50%; transform: translateX(-50%); background: #d10000; color: #fff; padding: 20px 50px; border: 4px solid #fff; z-index: 1000; transition: 0.5s; font-family: 'Persona5Menu'; }
         .notificacao.ativo { top: 20px; }
 
-        /* NOVO: BOTÃO E PAINEL LATERAL DE ACESSIBILIDADE STYLE PERSONA 5 */
+        /* BALÃO LATERAL E BOTÃO DE ACESSIBILIDADE - ESTILO PERSONA 5 */
         .btn-acessibilidade-fixo {
             position: fixed; bottom: 20px; right: 20px; z-index: 9999;
             background: #d10000; color: #fff; border: 3px solid #fff;
@@ -74,7 +74,7 @@
         .painel-acessibilidade.aberto { transform: scale(1); }
         .switch-container { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; border-bottom: 2px dashed #000; padding-bottom: 10px; }
         
-        /* Switch Customizado */
+        /* Chave Liga/Desliga */
         .switch { position: relative; display: inline-block; width: 50px; height: 26px; }
         .switch input { opacity: 0; width: 0; height: 0; }
         .slider { position: relative; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #ccc; transition: .3s; border: 2px solid #000; }
@@ -101,9 +101,9 @@
         </div>
         <div class="p5-info-box">
             <p style="color: #d10000; margin-top: 0; font-size: 12px; font-weight: 900;">O QUE É O VLIBRAS?</p>
-            É uma ferramenta pública que traduz conteúdos digitais (textos e vídeos) para a Língua Brasileira de Sinais (Libras), tornando o sistema acessível para pessoas surdas.
+            É uma ferramenta pública que traduz conteúdos digitais como textos e botões para a Língua Brasileira de Sinais (Libras), tornando o ambiente totalmente acessível para pessoas surdas ou com deficiência auditiva.
             <p style="color: #d10000; margin-bottom: 3px; font-size: 12px; font-weight: 900;">COMO USAR:</p>
-            Ative a chave acima. O bonequinho de libras surgirá na tela. Clique nele e selecione qualquer texto ou imagem com descrição na vitrine para ver a tradução imediata em sinais!
+            Ative a chave acima para que o bonequinho de libras surja na tela. Clique sobre ele e, em seguida, selecione qualquer bloco de texto ou elemento da vitrine para ver a tradução em tempo real executada pelo avatar!
         </div>
     </div>
 
@@ -185,7 +185,7 @@
         let mudancasLocais = {};
         let vlibrasInstanciado = false;
 
-        /* NOVAS FUNÇÕES CONTROLADORAS DO COMPONENTE FLUTUANTE */
+        /* INTERRUPTORES DO COMPONENTE FLUTUANTE */
         function togglePainelAcessivel() {
             document.getElementById('painel-libras').classList.toggle('aberto');
         }
@@ -195,6 +195,7 @@
             const container = document.getElementById('vlibras-container');
             
             if (ativo) {
+                // Injeta a marcação que o script do Governo Federal necessita para renderizar o boneco
                 container.innerHTML = `
                     <div vw class="enabled">
                         <div vw-access-button class="active"></div>
@@ -212,12 +213,11 @@
                     };
                     document.body.appendChild(script);
                 } else {
-                    // Se já foi carregado antes, apenas reinicializa o widget da janela global
                     new window.VLibras.Widget('https://vlibras.gov.br/app');
                 }
                 mostrarNotificacao("VLIBRAS ATIVADO!");
             } else {
-                container.innerHTML = ""; // Remove o elemento da tela limpando o boneco
+                container.innerHTML = ""; // Esvazia o container para remover o boneco completamente da interface
                 mostrarNotificacao("VLIBRAS DESATIVADO");
             }
         }
@@ -240,7 +240,7 @@
             carregarDados();
         }
 
-        /* ADMIN - ESTOQUE COM MINI IMAGENS */
+        /* ADMIN - ESTOQUE ATUALIZADO COM MINI IMAGENS */
         function renderAdmin() {
             const tbody = document.getElementById('tabela-admin-corpo');
             tbody.innerHTML = produtos.map(p => {
