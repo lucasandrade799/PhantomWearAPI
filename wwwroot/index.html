@@ -55,23 +55,71 @@
 
         .notificacao { position: fixed; top: -100px; left: 50%; transform: translateX(-50%); background: #d10000; color: #fff; padding: 20px 50px; border: 4px solid #fff; z-index: 1000; transition: 0.5s; font-family: 'Persona5Menu'; }
         .notificacao.ativo { top: 20px; }
+
+        /* NOVO: BOTÃO E PAINEL LATERAL DE ACESSIBILIDADE STYLE PERSONA 5 */
+        .btn-acessibilidade-fixo {
+            position: fixed; bottom: 20px; right: 20px; z-index: 9999;
+            background: #d10000; color: #fff; border: 3px solid #fff;
+            width: 50px; height: 50px; border-radius: 0; font-weight: 900;
+            font-size: 24px; cursor: pointer; box-shadow: 5px 5px 0 #000;
+            clip-path: polygon(15% 0%, 100% 0%, 85% 100%, 0% 100%);
+            display: flex; justify-content: center; align-items: center;
+        }
+        .painel-acessibilidade {
+            position: fixed; bottom: 80px; right: 20px; z-index: 9998;
+            background: #fff; color: #000; border: 5px solid #000;
+            width: 280px; padding: 20px; box-shadow: 10px 10px 0 #d10000;
+            transform: scale(0); transform-origin: bottom right; transition: 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        .painel-acessibilidade.aberto { transform: scale(1); }
+        .switch-container { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; border-bottom: 2px dashed #000; padding-bottom: 10px; }
+        
+        /* Switch Customizado */
+        .switch { position: relative; display: inline-block; width: 50px; height: 26px; }
+        .switch input { opacity: 0; width: 0; height: 0; }
+        .slider { position: relative; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #ccc; transition: .3s; border: 2px solid #000; }
+        .slider:before { position: absolute; content: ""; height: 16px; width: 16px; left: 3px; bottom: 3px; background-color: #000; transition: .3s; }
+        input:checked + .slider { background-color: #d10000; }
+        input:checked + .slider:before { transform: translateX(24px); background-color: #fff; }
+
+        .p5-info-box { background: #000; color: #fff; padding: 10px; font-size: 11px; font-family: sans-serif; font-weight: bold; line-height: 1.4; clip-path: polygon(0 0, 100% 5%, 95% 100%, 3% 95%); }
     </style>
 </head>
 <body>
 
-    <div id="notificacao" class="notificacao">SISTEMA PHANTOM</div>
+    <div id="notificacao" class="notificacao" role="alert" aria-live="assertive">SISTEMA PHANTOM</div>
+
+    <button class="btn-acessibilidade-fixo" onclick="togglePainelAcessivel()" aria-label="Menu de Acessibilidade">♿</button>
+    
+    <div id="painel-libras" class="painel-acessibilidade">
+        <div class="switch-container">
+            <span style="font-weight: 900; font-size: 14px;">ATIVAR VLIBRAS?</span>
+            <label class="switch">
+                <input type="checkbox" id="chk-vlibras" onchange="alternarWidgetLibras()">
+                <span class="slider"></span>
+            </label>
+        </div>
+        <div class="p5-info-box">
+            <p style="color: #d10000; margin-top: 0; font-size: 12px; font-weight: 900;">O QUE É O VLIBRAS?</p>
+            É uma ferramenta pública que traduz conteúdos digitais (textos e vídeos) para a Língua Brasileira de Sinais (Libras), tornando o sistema acessível para pessoas surdas.
+            <p style="color: #d10000; margin-bottom: 3px; font-size: 12px; font-weight: 900;">COMO USAR:</p>
+            Ative a chave acima. O bonequinho de libras surgirá na tela. Clique nele e selecione qualquer texto ou imagem com descrição na vitrine para ver a tradução imediata em sinais!
+        </div>
+    </div>
+
+    <div id="vlibras-container"></div>
 
     <section id="tela-login">
         <div class="login-box">
             <h2>ACCESS_LOGIN</h2>
-            <input type="text" id="login-email" placeholder="E-MAIL" value="empresa@phantom.com">
-            <input type="password" id="login-senha" placeholder="SENHA" value="123">
+            <input type="text" id="login-email" placeholder="E-MAIL" value="empresa@phantom.com" aria-label="E-mail de acesso">
+            <input type="password" id="login-senha" placeholder="SENHA" value="123" aria-label="Senha de acesso">
             <button class="btn-login" onclick="autenticar()">INFILTRAR-SE</button>
         </div>
     </section>
 
     <section id="tela-admin" class="hidden">
-        <nav>
+        <nav role="navigation" aria-label="Menu de Administração">
             <div style="padding:20px; background:#000; color:#fff; font-family:'Persona5Menu';">PHANTOM ADMIN</div>
             <ul>
                 <li id="li-estoque" class="active-tab" onclick="mudarAba('estoque')">Estoque</li>
@@ -91,7 +139,7 @@
             </div>
             <div id="aba-pedidos" class="tab-content">
                 <h1 style="color:#d10000; font-family:'Persona5Menu';">CONTRATOS</h1>
-                <div id="lista-pedidos-admin"></div>
+                <div id="lista-pedidos-admin" role="list" aria-label="Lista de Pedidos"></div>
             </div>
         </main>
     </section>
@@ -99,10 +147,10 @@
     <section id="tela-cliente" class="hidden">
         <header>
             <div class="logo">PHANTOM WEAR</div>
-            <div class="cart-status" onclick="abrirCarrinho()">CARRINHO [ <span id="cart-count">0</span> ]</div>
+            <div class="cart-status" onclick="abrirCarrinho()" role="button" aria-label="Abrir carrinho de compras">CARRINHO [ <span id="cart-count" aria-live="polite">0</span> ]</div>
         </header>
         <div id="vitrine-principal" class="vitrine-container">
-            <aside style="width:200px">
+            <aside style="width:200px" role="search" aria-label="Filtros de categoria">
                 <h3 style="color:#d10000; font-family:'Persona5Menu';">FILTRAR</h3>
                 <ul style="list-style:none; padding:0">
                     <li onclick="filtrar('TODOS')" style="cursor:pointer; padding:10px;">TODOS</li>
@@ -110,18 +158,18 @@
                     <li onclick="filtrar('Moletom')" style="cursor:pointer; padding:10px;">MOLETONS</li>
                 </ul>
             </aside>
-            <main class="grid-produtos" id="vitrine-produtos"></main>
+            <main class="grid-produtos" id="vitrine-produtos" role="list" aria-label="Vitrine de Roupas"></main>
         </div>
 
         <div id="secao-carrinho" class="hidden">
             <h1 style="font-family:'Persona5Menu'; color:#d10000; font-size:50px;">CHECKOUT</h1>
             <div class="carrinho-grid">
-                <div id="itens-carrinho-lista"></div>
+                <div id="itens-carrinho-lista" role="list" aria-label="Itens no carrinho"></div>
                 <div class="resumo-checkout">
                     <h2 style="font-family:'Persona5Menu';">RESUMO</h2>
-                    <div id="resumo-total" style="font-size:30px; font-weight:900; margin:20px 0;">TOTAL: R$ 0,00</div>
-                    <p>ENDEREÇO DE ENTREGA:</p>
-                    <textarea id="campo-endereco" class="input-endereco" rows="3"></textarea>
+                    <div id="resumo-total" style="font-size:30px; font-weight:900; margin:20px 0;" aria-live="polite">TOTAL: R$ 0,00</div>
+                    <p><label for="campo-endereco">ENDEREÇO DE ENTREGA:</label></p>
+                    <textarea id="campo-endereco" class="input-endereco" rows="3" placeholder="Digite o endereço completo para entrega"></textarea>
                     <button class="btn-comprar" onclick="finalizarPedido()" style="padding:20px;">FINALIZAR CONTRATO</button>
                     <p onclick="voltarVitrine()" style="text-decoration:underline; cursor:pointer; text-align:center; margin-top:20px;">VOLTAR</p>
                 </div>
@@ -135,6 +183,44 @@
         let carrinho = [];
         let selecoesTamanho = {};
         let mudancasLocais = {};
+        let vlibrasInstanciado = false;
+
+        /* NOVAS FUNÇÕES CONTROLADORAS DO COMPONENTE FLUTUANTE */
+        function togglePainelAcessivel() {
+            document.getElementById('painel-libras').classList.toggle('aberto');
+        }
+
+        function alternarWidgetLibras() {
+            const ativo = document.getElementById('chk-vlibras').checked;
+            const container = document.getElementById('vlibras-container');
+            
+            if (ativo) {
+                container.innerHTML = `
+                    <div vw class="enabled">
+                        <div vw-access-button class="active"></div>
+                        <div vw-plugin-wrapper>
+                            <div class="vw-plugin-top-wrapper"></div>
+                        </div>
+                    </div>`;
+                
+                if (!vlibrasInstanciado) {
+                    const script = document.createElement('script');
+                    script.src = "https://vlibras.gov.br/app/vlibras-plugin.js";
+                    script.onload = () => {
+                        new window.VLibras.Widget('https://vlibras.gov.br/app');
+                        vlibrasInstanciado = true;
+                    };
+                    document.body.appendChild(script);
+                } else {
+                    // Se já foi carregado antes, apenas reinicializa o widget da janela global
+                    new window.VLibras.Widget('https://vlibras.gov.br/app');
+                }
+                mostrarNotificacao("VLIBRAS ATIVADO!");
+            } else {
+                container.innerHTML = ""; // Remove o elemento da tela limpando o boneco
+                mostrarNotificacao("VLIBRAS DESATIVADO");
+            }
+        }
 
         async function carregarDados() {
             const res = await fetch(`${URL_API}/produtos`);
@@ -154,25 +240,26 @@
             carregarDados();
         }
 
-        /* ADMIN - ESTOQUE ATUALIZADO COM IMAGENS */
+        /* ADMIN - ESTOQUE COM MINI IMAGENS */
         function renderAdmin() {
             const tbody = document.getElementById('tabela-admin-corpo');
             tbody.innerHTML = produtos.map(p => {
                 const qtdMostrada = mudancasLocais[p.id] !== undefined ? mudancasLocais[p.id] : p.estoque;
                 const mudou = mudancasLocais[p.id] !== undefined && mudancasLocais[p.id] !== p.estoque;
+                const statusTexto = qtdMostrada <= 5 ? 'NÍVEL CRÍTICO' : 'ESTÁVEL';
                 return `
                 <tr>
                     <td style="display: flex; align-items: center; gap: 15px;">
-                        <img src="${p.img}" alt="${p.nome}" style="width: 40px; height: 40px; object-fit: contain; background: #eee; border: 2px solid #000;" onerror="this.src='https://via.placeholder.com/40x40?text=Item'">
+                        <img src="${p.img}" alt="Miniatura de ${p.nome}" style="width: 40px; height: 40px; object-fit: contain; background: #eee; border: 2px solid #000;" onerror="this.src='https://via.placeholder.com/40x40?text=Item'">
                         <span>${p.nome}</span>
                     </td>
                     <td>
-                        <button class="btn-qty" onclick="ajustarLocal(${p.id}, -1)">-</button>
-                        <span style="margin:0 10px; font-weight:bold;">${qtdMostrada}</span>
-                        <button class="btn-qty" onclick="ajustarLocal(${p.id}, 1)">+</button>
-                        <button class="btn-save-stock" id="save-${p.id}" style="display:${mudou?'inline-block':'none'}" onclick="salvarEstoque(${p.id})">SALVAR</button>
+                        <button class="btn-qty" onclick="ajustarLocal(${p.id}, -1)" aria-label="Diminuir estoque de ${p.nome}">-</button>
+                        <span style="margin:0 10px; font-weight:bold;" aria-label="Quantidade atual: ${qtdMostrada}">${qtdMostrada}</span>
+                        <button class="btn-qty" onclick="ajustarLocal(${p.id}, 1)" aria-label="Aumentar estoque de ${p.nome}">+</button>
+                        <button class="btn-save-stock" id="save-${p.id}" style="display:${mudou?'inline-block':'none'}" onclick="salvarEstoque(${p.id})" aria-label="Salvar alterações de estoque para ${p.nome}">SALVAR</button>
                     </td>
-                    <td style="color:${qtdMostrada<=5?'#d10000':'#fff'}">${qtdMostrada<=5?'CRÍTICO':'OK'}</td>
+                    <td style="color:${qtdMostrada<=5?'#d10000':'#fff'}" role="status">${statusTexto}</td>
                 </tr>`;
             }).join('');
         }
@@ -212,9 +299,9 @@
             const peds = await res.json();
             const div = document.getElementById('lista-pedidos-admin');
             div.innerHTML = peds.map(p => `
-                <div class="order-card">
-                    <div><b>#${p.id}</b> - ${p.status}<br><small>${p.itens.map(i=>i.nome).join(', ')}</small><br>${p.endereco}</div>
-                    <div>${p.status === 'PENDENTE' ? `<button class="btn-entregar" onclick="baixarPedido(${p.id})">ENVIAR E BAIXAR</button>` : 'ENVIADO'}</div>
+                <div class="order-card" role="listitem">
+                    <div><b>Contrato #${p.id}</b> - Status: ${p.status}<br><small>Itens: ${p.itens.map(i=>i.nome).join(', ')}</small><br>Destino: ${p.endereco}</div>
+                    <div>${p.status === 'PENDENTE' ? `<button class="btn-entregar" onclick="baixarPedido(${p.id})" aria-label="Despachar contrato número ${p.id}">ENVIAR E BAIXAR</button>` : 'ENVIADO'}</div>
                 </div>`).join('');
         }
 
@@ -225,27 +312,34 @@
             carregarDados();
         }
 
-        /* VITRINE E TAMANHOS */
+        /* VITRINE COM SUPORTE A LEITORES DE TELA (ARIA E ROLES) */
         function renderVitrine(lista) {
             const v = document.getElementById('vitrine-produtos');
-            v.innerHTML = lista.map(p => `
-                <div class="produto-card">
-                    <img src="${p.img}">
+            v.innerHTML = lista.map(p => {
+                const descricaoAcessivel = p.descricaoAcessivel || `${p.nome}. Categoria: ${p.cat}.`;
+                return `
+                <div class="produto-card" role="listitem">
+                    <img src="${p.img}" alt="${descricaoAcessivel}" aria-describedby="preco-${p.id}">
                     <h4>${p.nome}</h4>
-                    <p>R$ ${p.preco.toFixed(2)}</p>
-                    <div class="tamanhos-box" id="tams-${p.id}">
-                        <button class="btn-t" onclick="setTam(${p.id}, 'P', this)">P</button>
-                        <button class="btn-t" onclick="setTam(${p.id}, 'M', this)">M</button>
-                        <button class="btn-t" onclick="setTam(${p.id}, 'G', this)">G</button>
+                    <p id="preco-${p.id}" aria-label="Preço: ${p.preco.toFixed(2)} reais">R$ ${p.preco.toFixed(2)}</p>
+                    <div class="tamanhos-box" id="tams-${p.id}" role="group" aria-label="Escolha o tamanho para ${p.nome}">
+                        <button class="btn-t" onclick="setTam(${p.id}, 'P', this)" aria-label="Tamanho P">P</button>
+                        <button class="btn-t" onclick="setTam(${p.id}, 'M', this)" aria-label="Tamanho M">M</button>
+                        <button class="btn-t" onclick="setTam(${p.id}, 'G', this)" aria-label="Tamanho G">G</button>
                     </div>
-                    <button class="btn-comprar" onclick="addCarrinho(${p.id})">ADICIONAR</button>
-                </div>`).join('');
+                    <button class="btn-comprar" onclick="addCarrinho(${p.id})" aria-label="Adicionar ${p.nome} ao carrinho">ADICIONAR</button>
+                </div>`;
+            }).join('');
         }
 
         function setTam(id, tam, btn) {
             selecoesTamanho[id] = tam;
-            document.getElementById('tams-'+id).querySelectorAll('.btn-t').forEach(b => b.classList.remove('sel'));
+            document.getElementById('tams-'+id).querySelectorAll('.btn-t').forEach(b => {
+                b.classList.remove('sel');
+                b.removeAttribute('aria-current');
+            });
             btn.classList.add('sel');
+            btn.setAttribute('aria-current', 'true');
         }
 
         function addCarrinho(id) {
@@ -260,7 +354,7 @@
             document.getElementById('vitrine-principal').classList.add('hidden');
             document.getElementById('secao-carrinho').classList.remove('hidden');
             const lista = document.getElementById('itens-carrinho-lista');
-            lista.innerHTML = carrinho.map(i => `<div style="background:#1a1a1a; padding:15px; margin-bottom:10px; border-left:5px solid #d10000;">${i.nome} (${i.tam}) - R$ ${i.preco.toFixed(2)}</div>`).join('');
+            lista.innerHTML = carrinho.map(i => `<div role="listitem" style="background:#1a1a1a; padding:15px; margin-bottom:10px; border-left:5px solid #d10000;">${i.nome} (Tamanho: ${i.tam}) - R$ ${i.preco.toFixed(2)}</div>`).join('');
             const total = carrinho.reduce((a,b)=>a+b.preco, 0);
             document.getElementById('resumo-total').innerText = `TOTAL: R$ ${total.toFixed(2)}`;
         }
