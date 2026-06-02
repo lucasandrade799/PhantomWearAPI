@@ -15,9 +15,10 @@
         /* LOGIN */
         #tela-login { height: 100vh; display: flex; justify-content: center; align-items: center; background: linear-gradient(45deg, #000 70%, #d10000 70.1%); }
         .login-box { background: #fff; padding: 40px; border: 8px solid #000; transform: rotate(-2deg); box-shadow: 15px 15px 0 #d10000; width: 350px; }
-        .login-box h2 { font-family: 'Persona5Menu', sans-serif; text-align: center; background: #d10000; color: #fff; padding: 10px; }
+        .login-box h2 { font-family: 'Persona5Menu', sans-serif; text-align: center; background: #d10000; color: #fff; padding: 10px; margin-top: 0; }
         .login-box input { width: 100%; padding: 12px; margin: 10px 0; border: 3px solid #000; box-sizing: border-box; font-weight: bold; }
         .btn-login { width: 100%; padding: 15px; background: #d10000; color: #fff; border: none; font-weight: 900; cursor: pointer; clip-path: polygon(5% 0%, 100% 0%, 95% 100%, 0% 100%); }
+        .login-box .alternar-cadastro { text-align: center; margin-top: 15px; color: #000; font-size: 13px; font-weight: bold; text-decoration: underline; cursor: pointer; }
 
         /* HEADER CLIENTE */
         header { background: #d10000; padding: 15px 40px; display: flex; justify-content: space-between; border-bottom: 5px solid #fff; position: sticky; top: 0; z-index: 100; align-items: center; }
@@ -172,10 +173,11 @@
 
     <section id="tela-login">
         <div class="login-box">
-            <h2>LOGIN</h2>
-            <input type="text" id="login-email" placeholder="E-MAIL" value="empresa@phantom.com" aria-label="E-mail de acesso">
-            <input type="password" id="login-senha" placeholder="SENHA" value="123" aria-label="Senha de acesso">
-            <button class="btn-login" onclick="autenticar()">INFILTRAR-SE</button>
+            <h2 id="titulo-login">LOGIN</h2>
+            <input type="text" id="login-email" placeholder="E-MAIL" aria-label="E-mail de acesso">
+            <input type="password" id="login-senha" placeholder="SENHA" aria-label="Senha de acesso">
+            <button class="btn-login" id="btn-acao-login" onclick="executarAcaoLogin()">INFILTRAR-SE</button>
+            <div class="alternar-cadastro" id="link-alternar" onclick="alternarModoLogin()">Criar Conta</div>
         </div>
     </section>
 
@@ -185,7 +187,7 @@
             <ul>
                 <li id="li-estoque" class="active-tab" onclick="mudarAba('estoque')">Estoque</li>
                 <li id="li-pedidos" onclick="mudarAba('pedidos')">Pedidos</li>
-                <li onclick="location.reload()">Sair</li>
+                <li onclick="deslogarGeral()">Sair</li>
             </ul>
         </nav>
         <main class="admin-content">
@@ -224,6 +226,7 @@
                     <li onclick="filtrar('TODOS')" style="cursor:pointer; padding:10px;">TODOS</li>
                     <li onclick="filtrar('Camiseta')" style="cursor:pointer; padding:10px;">CAMISETAS</li>
                     <li onclick="filtrar('Moletom')" style="cursor:pointer; padding:10px;">MOLETONS</li>
+                    <li onclick="deslogarGeral()" style="cursor:pointer; padding:10px; color:#ff4d4d; margin-top:20px; border-top: 1px dashed #444; font-weight:bold;">SAIR</li>
                 </ul>
             </aside>
             <main class="grid-produtos" id="vitrine-produtos" role="list" aria-label="Vitrine de Roupas"></main>
@@ -257,6 +260,8 @@
         let selecoesTamanho = {};
         let mudancasLocais = {};
         let cachePedidos = [];
+        
+        let modoCadastro = false;
 
         function togglePainelAcessivel() {
             document.getElementById('painel-libras').classList.toggle('aberto');
@@ -274,6 +279,73 @@
             }
         }
 
+        function alternarModoLogin() {
+            modoCadastro = !modoCadastro;
+            const titulo = document.getElementById('titulo-login');
+            const botao = document.getElementById('btn-acao-login');
+            const link = document.getElementById('link-alternar');
+            
+            document.getElementById('login-email').value = "";
+            document.getElementById('login-senha').value = "";
+
+            if (modoCadastro) {
+                titulo.innerText = "CADASTRO";
+                botao.innerText = "CADASTRAR-SE";
+                link.innerText = "Já tenho conta (Voltar)";
+            } else {
+                titulo.innerText = "LOGIN";
+                botao.innerText = "INFILTRAR-SE";
+                link.innerText = "Criar Conta";
+            }
+        }
+
+        function executarAcaoLogin() {
+            if (modoCadastro) {
+                cadastrarUsuario();
+            } else {
+                autenticar();
+            }
+        }
+
+        function cadastrarUsuario() {
+            const email = document.getElementById('login-email').value.trim();
+            const senha = document.getElementById('login-senha').value.trim();
+
+            if (!email || !senha) {
+                alert("Preencha todos os campos para realizar o cadastro!");
+                return;
+            }
+
+            localStorage.setItem(`user_${email}`, senha);
+            mostrarNotificacao("CADASTRADO COM SUCESSO!");
+            
+            setTimeout(() => {
+                alternarModoLogin();
+                document.getElementById('login-email').value = email;
+            }, 1200);
+        }
+
+        // Função segura para deslogar e limpar os inputs de acesso
+        function deslogarGeral() {
+            document.getElementById('tela-admin').classList.add('hidden');
+            document.getElementById('tela-cliente').classList.add('hidden');
+            document.getElementById('secao-carrinho').classList.add('hidden');
+            document.getElementById('vitrine-principal').classList.remove('hidden');
+            
+            // Limpa dados temporários da sessão anterior
+            carrinho = [];
+            selecoesTamanho = {};
+            atualizarContadorCarrinho();
+
+            document.getElementById('login-email').value = "";
+            document.getElementById('login-senha').value = "";
+            
+            if (modoCadastro) alternarModoLogin(); // Força voltar para modo Login se estiver em Cadastro
+            
+            document.getElementById('tela-login').classList.remove('hidden');
+            mostrarNotificacao("SESSÃO ENCERRADA");
+        }
+
         async function carregarDados() {
             const res = await fetch(`${URL_API}/produtos`);
             produtos = await res.json();
@@ -282,14 +354,30 @@
         }
 
         function autenticar() {
-            const email = document.getElementById('login-email').value;
-            document.getElementById('tela-login').classList.add('hidden');
-            if (email.includes('empresa')) {
-                document.getElementById('tela-admin').classList.remove('hidden');
-            } else {
-                document.getElementById('tela-cliente').classList.remove('hidden');
+            const email = document.getElementById('login-email').value.trim();
+            const senha = document.getElementById('login-senha').value.trim();
+
+            if (!email || !senha) {
+                alert("Insira e-mail e senha!");
+                return;
             }
-            carregarDados();
+
+            const senhaSalva = localStorage.getItem(`user_${email}`);
+            
+            const credenciaisPadraoValidas = (email === "empresa@phantom.com" && senha === "123") || (email === "cliente@gmail.com" && senha === "123");
+            const credenciaisNovasValidas = (senhaSalva !== null && senhaSalva === senha);
+
+            if (credenciaisPadraoValidas || credenciaisNovasValidas) {
+                document.getElementById('tela-login').classList.add('hidden');
+                if (email.includes('empresa')) {
+                    document.getElementById('tela-admin').classList.remove('hidden');
+                } else {
+                    document.getElementById('tela-cliente').classList.remove('hidden');
+                }
+                carregarDados();
+            } else {
+                alert("E-mail ou senha incorretos!");
+            }
         }
 
         function renderAdmin() {
@@ -348,7 +436,6 @@
             const sinal = diff > 0 ? `+${diff}` : `${diff}`;
             const classeBadge = diff > 0 ? 'badge-subiu' : 'badge-desceu';
             
-            // ALTERADO: MUDOU DE CONTRATO PARA PEDIDO NO LOG
             let tagHtml = (origem === "MANUAL") 
                 ? `<span class="tag-tipo manual">AJUSTE MANUAL</span>` 
                 : `<span class="tag-tipo pedido">PEDIDO #${origem}</span>`;
@@ -380,7 +467,6 @@
             const res = await fetch(`${URL_API}/pedidos`);
             cachePedidos = await res.json();
             const div = document.getElementById('lista-pedidos-admin');
-            // ALTERADO: TEXTO MUDOU DE CONTRATO PARA PEDIDO
             div.innerHTML = cachePedidos.map(p => `
                 <div class="order-card" role="listitem">
                     <div><b>Pedido #${p.id}</b> - Status: ${p.status}<br><small>Itens: ${p.itens.map(i=>i.nome).join(', ')}</small><br>Destino: ${p.endereco}</div>
@@ -494,10 +580,21 @@
                 headers: {'Content-Type': 'application/json'},
                 body: JSON.stringify({ itens: carrinho, endereco: end, total: carrinho.reduce((a,b)=>a+b.preco,0) })
             });
-            // ALTERADO: AVISO MUDOU DE CONTRATO REALIZADO PARA PEDIDO REALIZADO
+            
+            // ALTERADO: Fluxo de checkout ajustado para não resetar a sessão do cliente
             if(res.ok) { 
                 mostrarNotificacao("PEDIDO REALIZADO!"); 
-                setTimeout(() => location.reload(), 2500);
+                
+                // Limpa o carrinho local e o endereço digitado
+                carrinho = [];
+                document.getElementById('campo-endereco').value = "";
+                atualizarContadorCarrinho();
+                
+                // Redireciona de volta para a vitrine logada após 2 segundos
+                setTimeout(() => {
+                    voltarVitrine();
+                    carregarDados(); // Atualiza estoque na vitrine caso tenha mudado
+                }, 2000);
             }
         }
 
