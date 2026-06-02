@@ -45,7 +45,7 @@
             padding: 20px;
         }
         .log-lista {
-            max-height: 200px;
+            max-height: 220px;
             overflow-y: auto;
             font-family: monospace;
             font-size: 13px;
@@ -57,8 +57,12 @@
             padding: 6px 8px;
             border-bottom: 1px solid #222;
             color: #aaa;
+            line-height: 1.4;
         }
-        .log-item .timestamp { color: #d10000; font-weight: bold; margin-right: 8px; }
+        .log-item .timestamp { color: #888; margin-right: 5px; }
+        .log-item .tag-tipo { background: #000; padding: 2px 6px; font-weight: bold; border: 1px solid #444; font-size: 11px; margin-right: 8px; }
+        .log-item .tag-tipo.manual { border-color: #28a745; color: #28a745; }
+        .log-item .tag-tipo.pedido { border-color: #d10000; color: #d10000; }
         .log-item .destaque { color: #fff; font-weight: bold; }
         .log-item .badge-subiu { color: #28a745; font-weight: bold; }
         .log-item .badge-desceu { color: #d10000; font-weight: bold; }
@@ -157,7 +161,7 @@
             <p style="color: #d10000; margin-top: 0; font-size: 12px; font-weight: 900;">O QUE É O VLIBRAS?</p>
             É uma ferramenta pública que traduz conteúdos digitais como textos e botões para a Língua Brasileira de Sinais (Libras), tornando o ambiente totalmente acessível para pessoas surdas ou com deficiência auditiva.
             <p style="color: #d10000; margin-bottom: 3px; font-size: 12px; font-weight: 900;">COMO USAR:</p>
-            Ative a chave acima para que o bonequinho de libras surja na tela. Clique sobre ele e, inicie em seguida, selecione qualquer bloco de texto ou elemento da vitrine para ver a tradução em tempo real executada pelo avatar!
+            Ative a chave acima para que o bonequinho de libras surja na tela. Clique sobre ele e, em seguida, selecione qualquer bloco de texto ou elemento da vitrine para ver a tradução em tempo real executada pelo avatar!
         </div>
     </div>
 
@@ -199,9 +203,9 @@
                 </div>
 
                 <div class="log-container">
-                    <h3 style="color:#d10000; font-family:'Persona5Menu'; margin-top:0; font-size:18px; letter-spacing:1px;">DOCUMENTAÇÃO DE FLUXO (LOGS)</h3>
+                    <h3 style="color:#d10000; font-family:'Persona5Menu'; margin-top:0; font-size:18px; letter-spacing:1px;">DOCUMENTAÇÃO DE FLUXO (LOGS DE AUDITORIA)</h3>
                     <div id="admin-logs-lista" class="log-lista">
-                        <div class="log-item" id="log-vazio">Nenhuma alteração documentada nesta sessão.</div>
+                        <div class="log-item" id="log-vazio">Nenhuma movimentação documentada nesta sessão.</div>
                     </div>
                 </div>
             </div>
@@ -256,7 +260,7 @@
         let carrinho = [];
         let selecoesTamanho = {};
         let mudancasLocais = {};
-        let logsHistorico = []; // Array para controle dos logs na sessão
+        let listaPedidosCache = []; // Guarda os pedidos para consulta local de dados ao dar baixa
 
         function togglePainelAcessivel() {
             document.getElementById('painel-libras').classList.toggle('aberto');
@@ -292,7 +296,7 @@
             carregarDados();
         }
 
-        /* ADMIN - ESTOQUE COM MINI IMAGENS */
+        /* ADMIN - ESTOQUE */
         function renderAdmin() {
             const tbody = document.getElementById('tabela-admin-corpo');
             tbody.innerHTML = produtos.map(p => {
@@ -334,37 +338,46 @@
                 body: JSON.stringify(qtdNova)
             });
             if (res.ok) {
-                // Registrar o Log de documentação antes de limpar a mudança local
-                adicionarLogDocumentacao(produtoOriginal.nome, qtdAntiga, qtdNova);
+                // Registra o log identificando como alteração Manual via painel
+                adicionarLogDocumentacao("MANUAL", produtoOriginal.nome, qtdAntiga, qtdNova);
 
                 produtoOriginal.estoque = qtdNova;
+                delete mudancasLocLocal = mudancasLocais[id];
                 delete mudancasLocais[id];
                 renderAdmin();
                 mostrarNotificacao("ESTOQUE SALVO!");
             }
         }
 
-        /* GERADOR E RENDERIZADOR DE LOGS DE AUDITORIA */
-        function adicionarLogDocumentacao(nomeProduto, antigo, novo) {
+        /* GERADOR DE LOGS DE AUDITORIA COM IDENTIFICAÇÃO DE ORIGEM */
+        function adicionarLogDocumentacao(origem, nomeProduto, antigo, novo) {
             const agora = new Date();
             const horaFormatada = agora.toLocaleTimeString('pt-BR');
             const diferenca = novo - antigo;
             const sinal = diferenca > 0 ? `+${diferenca}` : `${diferenca}`;
             const classeBadge = diferenca > 0 ? 'badge-subiu' : 'badge-desceu';
+            
+            // Define o marcador visual baseado na origem da ação
+            let tagHtml = '';
+            if (origem === "MANUAL") {
+                tagHtml = `<span class="tag-tipo manual">AJUSTE MANUAL</span>`;
+            } else {
+                tagHtml = `<span class="tag-tipo pedido">CONTRATO #${origem}</span>`;
+            }
 
             const textoLog = `
                 <div class="log-item">
                     <span class="timestamp">[${horaFormatada}]</span>
-                    O item <span class="destaque">${nomeProduto}</span> foi alterado de <span class="destaque">${antigo}</span> para <span class="destaque">${novo}</span> 
-                    (<span class="${classeBadge}">${sinal} unidades</span>).
+                    ${tagHtml}
+                    O item <span class="destaque">${nomeProduto}</span> mudou de <span class="destaque">${antigo}</span> para <span class="destaque">${novo}</span> 
+                    (<span class="${classeBadge}">${sinal} un.</span>).
                 </div>
             `;
 
             const listaLogs = document.getElementById('admin-logs-lista');
             const logVazio = document.getElementById('log-vazio');
-            if (logVazio) logVazio.remove(); // Remove a frase padrão de lista vazia
+            if (logVazio) logVazio.remove();
 
-            // Insere o log mais recente sempre no topo da lista
             listaLogs.insertAdjacentHTML('afterbegin', textoLog);
         }
 
@@ -379,9 +392,9 @@
 
         async function carregarPedidos() {
             const res = await fetch(`${URL_API}/pedidos`);
-            const peds = await res.json();
+            listaPedidosCache = await res.json();
             const div = document.getElementById('lista-pedidos-admin');
-            div.innerHTML = peds.map(p => `
+            div.innerHTML = listaPedidosCache.map(p => `
                 <div class="order-card" role="listitem">
                     <div><b>Contrato #${p.id}</b> - Status: ${p.status}<br><small>Itens: ${p.itens.map(i=>i.nome).join(', ')}</small><br>Destino: ${p.endereco}</div>
                     <div>${p.status === 'PENDENTE' ? `<button class="btn-entregar" onclick="baixarPedido(${p.id})" aria-label="Despachar contrato número ${p.id}">ENVIAR E BAIXAR</button>` : 'ENVIADO'}</div>
@@ -389,13 +402,41 @@
         }
 
         async function baixarPedido(id) {
-            await fetch(`${URL_API}/pedidos/${id}/entregar`, { method: 'POST' });
-            mostrarNotificacao("BAIXA REALIZADA!");
-            carregarPedidos();
-            carregarDados();
+            // Encontra o contrato antes do envio para saber quais itens serão reduzidos
+            const pedidoAlvo = listaPedidosCache.find(p => p.id === id);
+            
+            if (pedidoAlvo) {
+                // Cria um mapa de quantidades reduzidas neste contrato para consolidar se houver itens duplicados
+                const contagemItensPedido = {};
+                pedidoAlvo.itens.forEach(i => {
+                    contagemItensPedido[i.id] = (contagemItensPedido[i.id] || 0) + 1;
+                });
+
+                // Executa a requisição de entrega na API
+                const res = await fetch(`${URL_API}/pedidos/${id}/entregar`, { method: 'POST' });
+                if (res.ok) {
+                    // Documenta o log de redução de estoque de cada item baixado pelo contrato
+                    Object.keys(contagemItensPedido).forEach(prodId => {
+                        const idNum = parseInt(prodId);
+                        const produtoEstoque = produtos.find(x => x.id === idNum);
+                        if (produtoEstoque) {
+                            const qtdReduzida = contagemItensPedido[prodId];
+                            const qtdAntiga = produtoEstoque.estoque;
+                            const qtdNova = Math.max(0, qtdAntiga - qtdReduzida);
+
+                            // Dispara o log passando o ID do pedido como a origem
+                            adicionarLogDocumentacao(id, produtoEstoque.nome, qtdAntiga, qtdNova);
+                        }
+                    });
+
+                    mostrarNotificacao("BAIXA REALIZADA!");
+                    carregarPedidos();
+                    await carregarDados(); // Re-sincroniza o array global de produtos e tabela
+                }
+            }
         }
 
-        /* VITRINE COM SUPORTE A LEITORES DE TELA (ARIA E ROLES) */
+        /* VITRINE */
         function renderVitrine(lista) {
             const v = document.getElementById('vitrine-produtos');
             v.innerHTML = lista.map(p => {
@@ -433,7 +474,6 @@
             mostrarNotificacao("ADICIONADO!");
         }
 
-        /* ATUALIZAÇÃO DO CARRINHO COM OPÇÃO DE REMOÇÃO */
         function abrirCarrinho() {
             document.getElementById('vitrine-principal').classList.add('hidden');
             document.getElementById('secao-carrinho').classList.remove('hidden');
