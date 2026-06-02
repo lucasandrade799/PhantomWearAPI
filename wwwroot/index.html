@@ -37,17 +37,17 @@
         .order-card { background: #fff; color: #000; margin-bottom: 15px; padding: 20px; border-left: 10px solid #d10000; display: flex; justify-content: space-between; align-items: center; }
         .btn-entregar { background: #000; color: #fff; border: none; padding: 10px 20px; cursor: pointer; font-weight: 900; clip-path: polygon(10% 0, 100% 0, 90% 100%, 0 100%); }
 
-        /* PAINEL DE AUDITORIA DE LOGS */
-        .log-container { margin-top: 35px; background: #111; border: 3px dashed #d10000; padding: 20px; }
-        .log-lista { max-height: 200px; overflow-y: auto; font-family: monospace; font-size: 13px; background: #050505; padding: 10px; border: 1px solid #333; }
-        .log-item { padding: 6px 8px; border-bottom: 1px solid #222; color: #aaa; line-height: 1.4; }
-        .log-item .timestamp { color: #888; margin-right: 5px; }
-        .log-item .tag-tipo { background: #000; padding: 2px 6px; font-weight: bold; border: 1px solid #444; font-size: 11px; margin-right: 8px; }
+        /* PAINEL DE AUDITORIA DE LOGS - ALTERADO: SEM FONTE PERSONA E MAIOR LEGIBILIDADE */
+        .log-container { margin-top: 35px; background: #111; border: 3px dashed #ffffff; padding: 20px; }
+        .log-lista { max-height: 220px; overflow-y: auto; font-family: Arial, sans-serif; font-size: 14px; background: #050505; padding: 12px; border: 1px solid #333; }
+        .log-item { padding: 8px 8px; border-bottom: 1px solid #222; color: #eee; line-height: 1.5; }
+        .log-item .timestamp { color: #aaa; margin-right: 5px; font-weight: bold; }
+        .log-item .tag-tipo { background: #000; padding: 2px 6px; font-weight: bold; border: 1px solid #444; font-size: 12px; margin-right: 8px; }
         .log-item .tag-tipo.manual { border-color: #28a745; color: #28a745; }
-        .log-item .tag-tipo.pedido { border-color: #d10000; color: #d10000; }
-        .log-item .destaque { color: #fff; font-weight: bold; }
+        .log-item .tag-tipo.pedido { border-color: #ffffff; color: #ffffff; }
+        .log-item .destaque { color: #fff; font-weight: bold; text-decoration: underline; }
         .log-item .badge-subiu { color: #28a745; font-weight: bold; }
-        .log-item .badge-desceu { color: #d10000; font-weight: bold; }
+        .log-item .badge-desceu { color: #ff4d4d; font-weight: bold; }
 
         /* VITRINE E CARRINHO */
         .vitrine-container { display: flex; padding: 20px; }
@@ -62,26 +62,26 @@
 
         #secao-carrinho { padding: 40px; max-width: 1100px; margin: auto; }
         .carrinho-grid { display: grid; grid-template-columns: 1.5fr 1fr; gap: 40px; }
-        .resumo-checkout { background: #fff; color: #000; padding: 30px; border: 10px solid #000; box-shadow: 15px 15px 0 #d10000; }
+        .resumo-checkout { background: #fff; color: #000; padding: 30px; border: 10px solid #000; box-shadow: 15px 15px 0 #ffffff; }
         .input-endereco { width: 100%; padding: 15px; margin: 15px 0; border: 4px solid #000; font-weight: bold; box-sizing: border-box; }
 
-        /* POP-UPS DE AVISO ALTERADOS PARA DESTOAR E TER MAIOR VISIBILIDADE */
+        /* POP-UPS DE AVISO EXTERNOS (ALTO CONTRASTE) */
         .notificacao { 
             position: fixed; 
             top: -120px; 
             left: 50%; 
             transform: translateX(-50%); 
-            background: #000000;        /* Fundo Preto solicitado */
-            color: #ffffff;             /* Texto Branco */
-            padding: 25px 65px;         /* Espaçamento maior */
-            border: 5px solid #ffffff;  /* Borda grossa branca para alto contraste */
+            background: #000000;        
+            color: #ffffff;             
+            padding: 25px 65px;         
+            border: 5px solid #ffffff;  
             z-index: 10000; 
             transition: 0.5s; 
-            font-family: Arial, sans-serif; /* Removida a fonte do Persona */
-            font-size: 22px;            /* Tamanho de fonte aumentado */
+            font-family: Arial, sans-serif; 
+            font-size: 22px;            
             font-weight: bold;
             text-align: center;
-            box-shadow: 0px 10px 30px rgba(0, 0, 0, 0.7);
+            box-shadow: 0px 10px 30px rgba(0, 0, 0, 0.9);
         }
         .notificacao.ativo { top: 30px; }
 
@@ -97,7 +97,7 @@
         .painel-acessibilidade {
             position: fixed; bottom: 80px; right: 20px; z-index: 9998;
             background: #fff; color: #000; border: 5px solid #000;
-            width: 280px; padding: 20px; box-shadow: 10px 10px 0 #d10000;
+            width: 280px; padding: 20px; box-shadow: 10px 10px 0 #000;
             transform: scale(0); transform-origin: bottom right; transition: 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
         .painel-acessibilidade.aberto { transform: scale(1); }
@@ -108,7 +108,9 @@
         .slider:before { position: absolute; content: ""; height: 16px; width: 16px; left: 3px; bottom: 3px; background-color: #000; transition: .3s; }
         input:checked + .slider { background-color: #d10000; }
         input:checked + .slider:before { transform: translateX(24px); background-color: #fff; }
-        .p5-info-box { background: #000; color: #fff; padding: 10px; font-size: 11px; font-family: sans-serif; font-weight: bold; line-height: 1.4; clip-path: polygon(0 0, 100% 5%, 95% 100%, 3% 95%); }
+        
+        /* ALTERADO: INFO BOX COM TEXTOS E LABELS CLAROS */
+        .p5-info-box { background: #000; color: #fff; padding: 10px; font-size: 12px; font-family: sans-serif; font-weight: bold; line-height: 1.4; border: 1px solid #fff; }
         #vlibras-container { display: none; }
     </style>
 </head>
@@ -127,9 +129,9 @@
             </label>
         </div>
         <div class="p5-info-box">
-            <p style="color: #d10000; margin-top: 0; font-size: 12px; font-weight: 900;">O QUE É O VLIBRAS?</p>
+            <p style="color: #ffffff; margin-top: 0; font-size: 12px; font-weight: 900; text-decoration: underline;">O QUE É O VLIBRAS?</p>
             É uma ferramenta pública que traduz conteúdos digitais para a Língua Brasileira de Sinais (Libras).
-            <p style="color: #d10000; margin-bottom: 3px; font-size: 12px; font-weight: 900;">COMO USAR:</p>
+            <p style="color: #ffffff; margin-bottom: 3px; font-size: 12px; font-weight: 900; text-decoration: underline;">COMO USAR:</p>
             Ative a chave e clique sobre o avatar para traduzir os blocos de texto selecionados.
         </div>
     </div>
@@ -163,8 +165,8 @@
         </nav>
         <main class="admin-content">
             <div id="aba-estoque" class="tab-content active">
-                <h1 style="color:#d10000; font-family:'Persona5Menu';">CONTROLE DE CARGA</h1>
-                <div style="background:#1a1a1a; padding:25px; border:3px solid #d10000;">
+                <h1 style="color:#ffffff; font-family: Arial, sans-serif; font-weight: 900; text-transform: uppercase; border-bottom: 3px solid #fff; padding-bottom: 10px;">Controle de Carga</h1>
+                <div style="background:#1a1a1a; padding:25px; border:3px solid #ffffff;">
                     <table>
                         <thead><tr><th>Item</th><th>Quantidade</th><th>Status</th></tr></thead>
                         <tbody id="tabela-admin-corpo"></tbody>
@@ -172,14 +174,14 @@
                 </div>
 
                 <div class="log-container">
-                    <h3 style="color:#d10000; font-family:'Persona5Menu'; margin-top:0; font-size:18px; letter-spacing:1px;">DOCUMENTAÇÃO DE MOVIMENTAÇÕES (LOGS)</h3>
+                    <h3 style="color:#ffffff; font-family: Arial, sans-serif; margin-top:0; font-size:18px; letter-spacing:1px; font-weight: bold;">DOCUMENTAÇÃO DE MOVIMENTAÇÕES (LOGS)</h3>
                     <div id="admin-logs-lista" class="log-lista">
                         <div class="log-item" id="log-vazio">Nenhuma movimentação documentada nesta sessão.</div>
                     </div>
                 </div>
             </div>
             <div id="aba-pedidos" class="tab-content">
-                <h1 style="color:#d10000; font-family:'Persona5Menu';">CONTRATOS</h1>
+                <h1 style="color:#ffffff; font-family: Arial, sans-serif; font-weight: 900; text-transform: uppercase; border-bottom: 3px solid #fff; padding-bottom: 10px;">Contratos</h1>
                 <div id="lista-pedidos-admin" role="list" aria-label="Lista de Pedidos"></div>
             </div>
         </main>
@@ -192,7 +194,7 @@
         </header>
         <div id="vitrine-principal" class="vitrine-container">
             <aside style="width:200px" role="search" aria-label="Filtros de categoria">
-                <h3 style="color:#d10000; font-family:'Persona5Menu';">FILTRAR</h3>
+                <h3 style="color:#ffffff; font-family: Arial, sans-serif; font-weight: bold; border-bottom: 2px solid #fff; padding-bottom: 5px;">FILTRAR</h3>
                 <ul style="list-style:none; padding:0">
                     <li onclick="filtrar('TODOS')" style="cursor:pointer; padding:10px;">TODOS</li>
                     <li onclick="filtrar('Camiseta')" style="cursor:pointer; padding:10px;">CAMISETAS</li>
@@ -203,11 +205,11 @@
         </div>
 
         <div id="secao-carrinho" class="hidden">
-            <h1 style="font-family:'Persona5Menu'; color:#d10000; font-size:50px;">CHECKOUT</h1>
+            <h1 style="font-family: Arial, sans-serif; font-weight: 900; color:#ffffff; font-size:45px; border-bottom: 4px solid #fff; padding-bottom: 10px; margin-bottom: 20px;">CHECKOUT</h1>
             <div class="carrinho-grid">
                 <div id="itens-carrinho-lista" role="list" aria-label="Itens no carrinho"></div>
                 <div class="resumo-checkout">
-                    <h2 style="font-family:'Persona5Menu';">RESUMO</h2>
+                    <h2 style="font-family: Arial, sans-serif; font-weight: bold; letter-spacing: -1px;">RESUMO</h2>
                     <div id="resumo-total" style="font-size:30px; font-weight:900; margin:20px 0;" aria-live="polite">TOTAL: R$ 0,00</div>
                     <p><label for="campo-endereco">ENDEREÇO DE ENTREGA:</label></p>
                     <textarea id="campo-endereco" class="input-endereco" rows="3" placeholder="Digite o endereço completo para entrega"></textarea>
@@ -283,7 +285,7 @@
                         <button class="btn-qty" onclick="ajustarLocal(${p.id}, 1)" aria-label="Aumentar estoque de ${p.nome}">+</button>
                         <button class="btn-save-stock" id="save-${p.id}" style="display:${mudou?'inline-block':'none'}" onclick="salvarEstoque(${p.id})">SALVAR</button>
                     </td>
-                    <td style="color:${qtdMostrada<=5?'#d10000':'#fff'}">${statusTexto}</td>
+                    <td style="color:${qtdMostrada<=5?'#ff4d4d':'#fff'}">${statusTexto}</td>
                 </tr>`;
             }).join('');
         }
@@ -443,7 +445,7 @@
             });
             if(res.ok) { 
                 mostrarNotificacao("CONTRATO REALIZADO!"); 
-                setTimeout(() => location.reload(), 2000);
+                setTimeout(() => location.reload(), 2500);
             }
         }
 
