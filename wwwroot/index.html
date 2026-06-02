@@ -50,6 +50,33 @@
 
         #secao-carrinho { padding: 40px; max-width: 1100px; margin: auto; }
         .carrinho-grid { display: grid; grid-template-columns: 1.5fr 1fr; gap: 40px; }
+        
+        /* ESTILIZAÇÃO DO ITEM DO CARRINHO COM SUPORTE A REMOÇÃO */
+        .item-carrinho { 
+            background: #1a1a1a; 
+            padding: 15px; 
+            margin-bottom: 10px; 
+            border-left: 5px solid #d10000; 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+        }
+        .btn-remover-item {
+            background: #d10000;
+            color: #fff;
+            border: 2px solid #fff;
+            padding: 6px 12px;
+            font-weight: bold;
+            cursor: pointer;
+            font-size: 14px;
+            transition: 0.2s;
+        }
+        .btn-remover-item:hover {
+            background: #fff;
+            color: #000;
+            border-color: #000;
+        }
+
         .resumo-checkout { background: #fff; color: #000; padding: 30px; border: 10px solid #000; box-shadow: 15px 15px 0 #d10000; }
         .input-endereco { width: 100%; padding: 15px; margin: 15px 0; border: 4px solid #000; font-weight: bold; box-sizing: border-box; }
 
@@ -106,7 +133,7 @@
             <p style="color: #d10000; margin-top: 0; font-size: 12px; font-weight: 900;">O QUE É O VLIBRAS?</p>
             É uma ferramenta pública que traduz conteúdos digitais como textos e botões para a Língua Brasileira de Sinais (Libras), tornando o ambiente totalmente acessível para pessoas surdas ou com deficiência auditiva.
             <p style="color: #d10000; margin-bottom: 3px; font-size: 12px; font-weight: 900;">COMO USAR:</p>
-            Ative a chave acima para que o bonequinho de libras surja na tela. Clique sobre ele e, em seguida, selecione qualquer bloco de texto ou elemento da vitrine para ver a tradução em tempo real executada pelo avatar!
+            Ative a chave acima para que o bonequinho de libras surja na tela. Clique sobre ele e, inicie em seguida, selecione qualquer bloco de texto ou elemento da vitrine para ver a tradução em tempo real executada pelo avatar!
         </div>
     </div>
 
@@ -346,13 +373,33 @@
             mostrarNotificacao("ADICIONADO!");
         }
 
+        /* ATUALIZAÇÃO DO CARRINHO COM OPÇÃO DE REMOÇÃO */
         function abrirCarrinho() {
             document.getElementById('vitrine-principal').classList.add('hidden');
             document.getElementById('secao-carrinho').classList.remove('hidden');
+            renderizarItensCarrinho();
+        }
+
+        function renderizarItensCarrinho() {
             const lista = document.getElementById('itens-carrinho-lista');
-            lista.innerHTML = carrinho.map(i => `<div role="listitem" style="background:#1a1a1a; padding:15px; margin-bottom:10px; border-left:5px solid #d10000;">${i.nome} (Tamanho: ${i.tam}) - R$ ${i.preco.toFixed(2)}</div>`).join('');
-            const total = carrinho.reduce((a,b)=>a+b.preco, 0);
+            lista.innerHTML = carrinho.map((i, index) => `
+                <div role="listitem" class="item-carrinho">
+                    <div>
+                        <b>${i.nome}</b> (Tamanho: ${i.tam}) <br>
+                        <span>R$ ${i.preco.toFixed(2)}</span>
+                    </div>
+                    <button class="btn-remover-item" onclick="removerDoCarrinho(${index})" aria-label="Remover ${i.nome} tamanho ${i.tam} do carrinho" title="Remover item">🗑️</button>
+                </div>`).join('');
+                
+            const total = carrinho.reduce((a, b) => a + b.preco, 0);
             document.getElementById('resumo-total').innerText = `TOTAL: R$ ${total.toFixed(2)}`;
+        }
+
+        function removerDoCarrinho(index) {
+            carrinho.splice(index, 1); // Remove o item do array usando o índice correspondente
+            document.getElementById('cart-count').innerText = carrinho.length; // Atualiza o badge do Header
+            renderizarItensCarrinho(); // Remonta o HTML da listinha e recalcula o total
+            mostrarNotificacao("ITEM REMOVIDO!");
         }
 
         async function finalizarPedido() {
