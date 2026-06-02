@@ -37,6 +37,32 @@
         .order-card { background: #fff; color: #000; margin-bottom: 15px; padding: 20px; border-left: 10px solid #d10000; display: flex; justify-content: space-between; align-items: center; }
         .btn-entregar { background: #000; color: #fff; border: none; padding: 10px 20px; cursor: pointer; font-weight: 900; clip-path: polygon(10% 0, 100% 0, 90% 100%, 0 100%); }
 
+        /* SEÇÃO DE LOGS DE DOCUMENTAÇÃO */
+        .log-container {
+            margin-top: 30px;
+            background: #111;
+            border: 3px dashed #d10000;
+            padding: 20px;
+        }
+        .log-lista {
+            max-height: 200px;
+            overflow-y: auto;
+            font-family: monospace;
+            font-size: 13px;
+            background: #050505;
+            padding: 10px;
+            border: 1px solid #333;
+        }
+        .log-item {
+            padding: 6px 8px;
+            border-bottom: 1px solid #222;
+            color: #aaa;
+        }
+        .log-item .timestamp { color: #d10000; font-weight: bold; margin-right: 8px; }
+        .log-item .destaque { color: #fff; font-weight: bold; }
+        .log-item .badge-subiu { color: #28a745; font-weight: bold; }
+        .log-item .badge-desceu { color: #d10000; font-weight: bold; }
+
         /* VITRINE E CARRINHO */
         .vitrine-container { display: flex; padding: 20px; }
         .grid-produtos { flex-grow: 1; display: grid; grid-template-columns: repeat(3, 1fr); gap: 25px; padding-left: 25px; }
@@ -51,7 +77,6 @@
         #secao-carrinho { padding: 40px; max-width: 1100px; margin: auto; }
         .carrinho-grid { display: grid; grid-template-columns: 1.5fr 1fr; gap: 40px; }
         
-        /* ESTILIZAÇÃO DO ITEM DO CARRINHO COM SUPORTE A REMOÇÃO */
         .item-carrinho { 
             background: #1a1a1a; 
             padding: 15px; 
@@ -111,7 +136,6 @@
 
         .p5-info-box { background: #000; color: #fff; padding: 10px; font-size: 11px; font-family: sans-serif; font-weight: bold; line-height: 1.4; clip-path: polygon(0 0, 100% 5%, 95% 100%, 3% 95%); }
 
-        /* Força o VLibras a começar invisível até ser ligado */
         #vlibras-container { display: none; }
     </style>
 </head>
@@ -173,6 +197,13 @@
                         <tbody id="tabela-admin-corpo"></tbody>
                     </table>
                 </div>
+
+                <div class="log-container">
+                    <h3 style="color:#d10000; font-family:'Persona5Menu'; margin-top:0; font-size:18px; letter-spacing:1px;">DOCUMENTAÇÃO DE FLUXO (LOGS)</h3>
+                    <div id="admin-logs-lista" class="log-lista">
+                        <div class="log-item" id="log-vazio">Nenhuma alteração documentada nesta sessão.</div>
+                    </div>
+                </div>
             </div>
             <div id="aba-pedidos" class="tab-content">
                 <h1 style="color:#d10000; font-family:'Persona5Menu';">CONTRATOS</h1>
@@ -216,7 +247,6 @@
 
     <script src="https://vlibras.gov.br/app/vlibras-plugin.js"></script>
     <script>
-        // Inicializa o widget globalmente em segundo plano
         new window.VLibras.Widget('https://vlibras.gov.br/app');
     </script>
 
@@ -226,8 +256,8 @@
         let carrinho = [];
         let selecoesTamanho = {};
         let mudancasLocais = {};
+        let logsHistorico = []; // Array para controle dos logs na sessão
 
-        /* CONTROLADORES VISUAIS DA ACESSIBILIDADE */
         function togglePainelAcessivel() {
             document.getElementById('painel-libras').classList.toggle('aberto');
         }
@@ -235,12 +265,11 @@
         function alternarWidgetLibras() {
             const ativo = document.getElementById('chk-vlibras').checked;
             const container = document.getElementById('vlibras-container');
-            
             if (ativo) {
-                container.style.display = "block"; // Revela o boneco na interface
+                container.style.display = "block";
                 mostrarNotificacao("VLIBRAS ATIVADO!");
             } else {
-                container.style.display = "none";  // Oculta o boneco completamente
+                container.style.display = "none";
                 mostrarNotificacao("VLIBRAS DESATIVADO");
             }
         }
@@ -295,17 +324,48 @@
         }
 
         async function salvarEstoque(id) {
+            const produtoOriginal = produtos.find(x => x.id === id);
+            const qtdAntiga = produtoOriginal.estoque;
+            const qtdNova = mudancasLocais[id];
+
             const res = await fetch(`${URL_API}/produtos/${id}`, {
                 method: 'PATCH',
                 headers: {'Content-Type': 'application/json'},
-                body: JSON.stringify(mudancasLocais[id])
+                body: JSON.stringify(qtdNova)
             });
             if (res.ok) {
-                produtos.find(x => x.id === id).estoque = mudancasLocais[id];
+                // Registrar o Log de documentação antes de limpar a mudança local
+                adicionarLogDocumentacao(produtoOriginal.nome, qtdAntiga, qtdNova);
+
+                produtoOriginal.estoque = qtdNova;
                 delete mudancasLocais[id];
                 renderAdmin();
                 mostrarNotificacao("ESTOQUE SALVO!");
             }
+        }
+
+        /* GERADOR E RENDERIZADOR DE LOGS DE AUDITORIA */
+        function adicionarLogDocumentacao(nomeProduto, antigo, novo) {
+            const agora = new Date();
+            const horaFormatada = agora.toLocaleTimeString('pt-BR');
+            const diferenca = novo - antigo;
+            const sinal = diferenca > 0 ? `+${diferenca}` : `${diferenca}`;
+            const classeBadge = diferenca > 0 ? 'badge-subiu' : 'badge-desceu';
+
+            const textoLog = `
+                <div class="log-item">
+                    <span class="timestamp">[${horaFormatada}]</span>
+                    O item <span class="destaque">${nomeProduto}</span> foi alterado de <span class="destaque">${antigo}</span> para <span class="destaque">${novo}</span> 
+                    (<span class="${classeBadge}">${sinal} unidades</span>).
+                </div>
+            `;
+
+            const listaLogs = document.getElementById('admin-logs-lista');
+            const logVazio = document.getElementById('log-vazio');
+            if (logVazio) logVazio.remove(); // Remove a frase padrão de lista vazia
+
+            // Insere o log mais recente sempre no topo da lista
+            listaLogs.insertAdjacentHTML('afterbegin', textoLog);
         }
 
         /* ADMIN - PEDIDOS */
@@ -396,9 +456,9 @@
         }
 
         function removerDoCarrinho(index) {
-            carrinho.splice(index, 1); // Remove o item do array usando o índice correspondente
-            document.getElementById('cart-count').innerText = carrinho.length; // Atualiza o badge do Header
-            renderizarItensCarrinho(); // Remonta o HTML da listinha e recalcula o total
+            carrinho.splice(index, 1);
+            document.getElementById('cart-count').innerText = carrinho.length;
+            renderizarItensCarrinho();
             mostrarNotificacao("ITEM REMOVIDO!");
         }
 
