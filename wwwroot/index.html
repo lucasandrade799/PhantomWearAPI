@@ -65,8 +65,25 @@
         .resumo-checkout { background: #fff; color: #000; padding: 30px; border: 10px solid #000; box-shadow: 15px 15px 0 #d10000; }
         .input-endereco { width: 100%; padding: 15px; margin: 15px 0; border: 4px solid #000; font-weight: bold; box-sizing: border-box; }
 
-        .notificacao { position: fixed; top: -100px; left: 50%; transform: translateX(-50%); background: #d10000; color: #fff; padding: 20px 50px; border: 4px solid #fff; z-index: 1000; transition: 0.5s; font-family: 'Persona5Menu'; }
-        .notificacao.ativo { top: 20px; }
+        /* POP-UPS DE AVISO ALTERADOS PARA DESTOAR E TER MAIOR VISIBILIDADE */
+        .notificacao { 
+            position: fixed; 
+            top: -120px; 
+            left: 50%; 
+            transform: translateX(-50%); 
+            background: #000000;        /* Fundo Preto solicitado */
+            color: #ffffff;             /* Texto Branco */
+            padding: 25px 65px;         /* Espaçamento maior */
+            border: 5px solid #ffffff;  /* Borda grossa branca para alto contraste */
+            z-index: 10000; 
+            transition: 0.5s; 
+            font-family: Arial, sans-serif; /* Removida a fonte do Persona */
+            font-size: 22px;            /* Tamanho de fonte aumentado */
+            font-weight: bold;
+            text-align: center;
+            box-shadow: 0px 10px 30px rgba(0, 0, 0, 0.7);
+        }
+        .notificacao.ativo { top: 30px; }
 
         /* ACESSIBILIDADE */
         .btn-acessibilidade-fixo {
@@ -212,7 +229,7 @@
         let carrinho = [];
         let selecoesTamanho = {};
         let mudancasLocais = {};
-        let cachePedidos = []; // Guarda os contratos localmente para calcular a redução antes de dar a baixa
+        let cachePedidos = [];
 
         function togglePainelAcessivel() {
             document.getElementById('painel-libras').classList.toggle('aberto');
@@ -221,8 +238,13 @@
         function alternarWidgetLibras() {
             const ativo = document.getElementById('chk-vlibras').checked;
             const container = document.getElementById('vlibras-container');
-            if (ativo) { container.style.display = "block"; mostrarNotificacao("VLIBRAS ATIVADO!"); }
-            else { container.style.display = "none"; mostrarNotificacao("VLIBRAS DESATIVADO"); }
+            if (ativo) { 
+                container.style.display = "block"; 
+                mostrarNotificacao("VLIBRAS ATIVADO!"); 
+            } else { 
+                container.style.display = "none"; 
+                mostrarNotificacao("VLIBRAS DESATIVADO"); 
+            }
         }
 
         async function carregarDados() {
@@ -284,7 +306,6 @@
                 body: JSON.stringify(qtdNova)
             });
             if (res.ok) {
-                // Registo de auditoria com etiqueta MANUAL
                 adicionarLogAuditoria("MANUAL", produtoOriginal.nome, qtdAntiga, qtdNova);
                 produtoOriginal.estoque = qtdNova;
                 delete mudancasLocais[id];
@@ -293,7 +314,6 @@
             }
         }
 
-        /* FUNÇÃO CENTRALIZADA DE LOGS COM DIFERENCIAÇÃO DE ORIGEM */
         function adicionarLogAuditoria(origem, nomeProduto, antigo, novo) {
             const agora = new Date();
             const hora = agora.toLocaleTimeString('pt-BR');
@@ -343,7 +363,6 @@
             const pedidoAlvo = cachePedidos.find(p => p.id === id);
             
             if (pedidoAlvo) {
-                // Conta quantos produtos de cada ID existem neste pedido específico
                 const contagemItens = {};
                 pedidoAlvo.itens.forEach(i => {
                     contagemItens[i.id] = (contagemItens[i.id] || 0) + 1;
@@ -351,7 +370,6 @@
 
                 const res = await fetch(`${URL_API}/pedidos/${id}/entregar`, { method: 'POST' });
                 if (res.ok) {
-                    // Mapeia e cria os logs antes de sincronizar o ecrã com a API
                     Object.keys(contagemItens).forEach(prodId => {
                         const idNum = parseInt(prodId);
                         const produtoNoEstoque = produtos.find(x => x.id === idNum);
@@ -360,14 +378,13 @@
                             const antigoEstoque = produtoNoEstoque.estoque;
                             const novoEstoque = Math.max(0, antigoEstoque - qtdRetirada);
 
-                            // Envia o ID do Contrato como origem do Log
                             adicionarLogAuditoria(id, produtoNoEstoque.nome, antigoEstoque, novoEstoque);
                         }
                     });
 
                     mostrarNotificacao("BAIXA REALIZADA!");
                     carregarPedidos();
-                    await carregarDados(); // Atualiza as variáveis e a tabela de stocks
+                    await carregarDados();
                 }
             }
         }
@@ -424,7 +441,10 @@
                 headers: {'Content-Type': 'application/json'},
                 body: JSON.stringify({ itens: carrinho, endereco: end, total: carrinho.reduce((a,b)=>a+b.preco,0) })
             });
-            if(res.ok) { alert("Contrato Realizado!"); location.reload(); }
+            if(res.ok) { 
+                mostrarNotificacao("CONTRATO REALIZADO!"); 
+                setTimeout(() => location.reload(), 2000);
+            }
         }
 
         function filtrar(cat) {
@@ -439,8 +459,9 @@
 
         function mostrarNotificacao(texto) {
             const n = document.getElementById('notificacao');
-            n.innerText = texto; n.classList.add('ativo');
-            setTimeout(() => n.classList.remove('ativo'), 2000);
+            n.innerText = texto; 
+            n.classList.add('ativo');
+            setTimeout(() => n.classList.remove('ativo'), 2500);
         }
     </script>
 </body>
