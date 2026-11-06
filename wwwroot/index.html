@@ -103,6 +103,11 @@
            ADAPTAÇÕES EXCLUSIVAS PARA CELULAR (MOBILE)
            ========================================== */
         @media (max-width: 768px) {
+            /* Esconde a barra lateral antiga de PC no celular */
+            .pc-sidebar { 
+                display: none !important; 
+            }
+
             header { padding: 12px 15px; }
             .logo { font-size: 20px; padding: 5px 10px; }
             .cart-status { padding: 8px 15px; font-size: 12px; }
@@ -301,7 +306,8 @@
             document.getElementById('tela-admin').classList.add('hidden');
             document.getElementById('tela-cliente').classList.add('hidden');
             document.getElementById('secao-carrinho').classList.add('hidden');
-            document.querySelector('.pc-sidebar').style.display = 'block';
+            const pcSidebar = document.querySelector('.pc-sidebar');
+            if(pcSidebar) pcSidebar.style.display = 'block';
             fecharModalFiltro();
             carrinho = [];
             selecoesTamanho = {};
@@ -511,7 +517,8 @@
         }
 
         function abrirCarrinho() {
-            document.querySelector('.pc-sidebar').style.display = 'none';
+            const pcSidebar = document.querySelector('.pc-sidebar');
+            if(pcSidebar) pcSidebar.style.display = 'none';
             document.getElementById('vitrine-produtos').parentElement.style.display = 'none';
             document.getElementById('secao-carrinho').classList.remove('hidden');
             renderizarItensCarrinho();
@@ -543,7 +550,8 @@
         }
 
         function voltarVitrine() {
-            document.querySelector('.pc-sidebar').style.display = 'block';
+            const pcSidebar = document.querySelector('.pc-sidebar');
+            if(pcSidebar && window.innerWidth > 768) pcSidebar.style.display = 'block';
             document.getElementById('vitrine-produtos').parentElement.style.display = 'flex';
             document.getElementById('secao-carrinho').classList.add('hidden');
         }
