@@ -14,129 +14,89 @@
 
         /* LOGIN */
         #tela-login { height: 100vh; display: flex; justify-content: center; align-items: center; background: linear-gradient(45deg, #000 70%, #d10000 70.1%); }
-        .login-box { background: #fff; padding: 40px; border: 8px solid #000; transform: rotate(-2deg); box-shadow: 15px 15px 0 #d10000; width: 350px; }
+        .login-box { background: #fff; padding: 30px; border: 8px solid #000; transform: rotate(-2deg); box-shadow: 10px 10px 0 #d10000; width: 85%; max-width: 350px; box-sizing: border-box; }
         .login-box h2 { font-family: 'Persona5Menu', sans-serif; text-align: center; background: #d10000; color: #fff; padding: 10px; margin-top: 0; }
         .login-box input { width: 100%; padding: 12px; margin: 10px 0; border: 3px solid #000; box-sizing: border-box; font-weight: bold; }
         .btn-login { width: 100%; padding: 15px; background: #d10000; color: #fff; border: none; font-weight: 900; cursor: pointer; clip-path: polygon(5% 0%, 100% 0%, 95% 100%, 0% 100%); }
         .login-box .alternar-cadastro { text-align: center; margin-top: 15px; color: #000; font-size: 13px; font-weight: bold; text-decoration: underline; cursor: pointer; }
 
         /* HEADER CLIENTE */
-        header { background: #d10000; padding: 15px 40px; display: flex; justify-content: space-between; border-bottom: 5px solid #fff; position: sticky; top: 0; z-index: 100; align-items: center; }
-        .logo { font-family: 'Persona5Menu', sans-serif; font-size: 28px; background: #000; padding: 5px 15px; border: 2px solid #fff; transform: rotate(-2deg); }
-        .cart-status { cursor: pointer; background: #fff; color: #000; padding: 10px 25px; font-weight: 900; clip-path: polygon(15% 0, 100% 0, 85% 100%, 0 100%); transform: skewX(-10deg); border: 2px solid #000; }
+        header { background: #d10000; padding: 12px 15px; display: flex; justify-content: space-between; border-bottom: 5px solid #fff; position: sticky; top: 0; z-index: 100; align-items: center; width: 100%; box-sizing: border-box; }
+        .logo { font-family: 'Persona5Menu', sans-serif; font-size: 20px; background: #000; padding: 5px 10px; border: 2px solid #fff; transform: rotate(-2deg); }
+        .cart-status { cursor: pointer; background: #fff; color: #000; padding: 8px 15px; font-size: 12px; font-weight: 900; clip-path: polygon(15% 0, 100% 0, 85% 100%, 0 100%); transform: skewX(-10deg); border: 2px solid #000; }
 
         /* ADMIN */
-        #tela-admin { display: flex; min-height: 100vh; }
-        nav { width: 260px; background: #d10000; border-right: 5px solid #fff; position: fixed; height: 100vh; z-index: 10; }
-        main.admin-content { flex-grow: 1; padding: 50px; margin-left: 260px; }
+        #tela-admin { display: flex; flex-direction: column; min-height: 100vh; }
+        nav { width: 100%; background: #d10000; border-bottom: 5px solid #fff; position: relative; height: auto; z-index: 10; }
+        nav ul { display: flex; padding: 0; margin: 0; list-style: none; }
+        nav li { flex: 1; text-align: center; padding: 15px 5px; cursor: pointer; border-right: 1px solid rgba(255,255,255,0.2); text-transform: uppercase; font-size: 12px; }
+        nav li.active-tab { background: #fff; color: #d10000; font-weight: 900; }
+        main.admin-content { flex-grow: 1; padding: 15px; margin-left: 0; }
         .tab-content { display: none; }
         .tab-content.active { display: block; }
-        nav li { padding: 20px; cursor: pointer; border-bottom: 1px solid rgba(255,255,255,0.2); text-transform: uppercase; }
-        nav li.active-tab { background: #fff; color: #d10000; font-weight: 900; }
 
-        /* ESTOQUE E BOTÕES */
+        /* ESTOQUE E BOTÕES ADMIN */
         .btn-qty { background: #fff; border: 2px solid #000; width: 30px; height: 30px; cursor: pointer; font-weight: bold; }
-        .btn-save-stock { background: #28a745; color: #fff; border: none; padding: 5px 10px; cursor: pointer; display: none; border: 2px solid #000; margin-left: 10px; }
-        
-        .order-card { background: #fff; color: #000; margin-bottom: 15px; padding: 20px; border-left: 10px solid #d10000; display: flex; justify-content: space-between; align-items: center; }
+        .btn-save-stock { background: #28a745; color: #fff; border: none; padding: 5px 10px; cursor: pointer; display: none; border: 2px solid #000; margin-left: 5px; }
+        .order-card { background: #fff; color: #000; margin-bottom: 15px; padding: 15px; border-left: 10px solid #d10000; display: flex; flex-direction: column; gap: 10px; }
         .btn-entregar { background: #000; color: #fff; border: none; padding: 10px 20px; cursor: pointer; font-weight: 900; clip-path: polygon(10% 0, 100% 0, 90% 100%, 0 100%); }
 
-        /* PAINEL DE LOGS */
-        .log-container { margin-top: 35px; background: #111; border: 3px dashed #ffffff; padding: 20px; }
-        .log-lista { max-height: 220px; overflow-y: auto; font-family: Arial, sans-serif; font-size: 14px; background: #050505; padding: 12px; border: 1px solid #333; }
-        .log-item { padding: 8px 8px; border-bottom: 1px solid #222; color: #eee; line-height: 1.5; }
-        .log-item .timestamp { color: #aaa; margin-right: 5px; font-weight: bold; }
-        .log-item .tag-tipo { background: #000; padding: 2px 6px; font-weight: bold; border: 1px solid #444; font-size: 12px; margin-right: 8px; }
-        .log-item .tag-tipo.manual { border-color: #28a745; color: #28a745; }
-        .log-item .tag-tipo.pedido { border-color: #ffffff; color: #ffffff; }
-        .log-item .destaque { color: #fff; font-weight: bold; text-decoration: underline; }
-        .log-item .badge-subiu { color: #28a745; font-weight: bold; }
-        .log-item .badge-desceu { color: #ff4d4d; font-weight: bold; }
+        /* LOGS */
+        .log-container { margin-top: 25px; background: #111; border: 3px dashed #ffffff; padding: 15px; }
+        .log-lista { max-height: 200px; overflow-y: auto; font-family: Arial, sans-serif; font-size: 13px; background: #050505; padding: 10px; border: 1px solid #333; }
+        .log-item { padding: 6px 0; border-bottom: 1px solid #222; color: #eee; line-height: 1.4; }
 
-        /* VITRINE E CARRINHO */
-        .vitrine-container { display: flex; padding: 20px; }
-        .grid-produtos { flex-grow: 1; display: grid; grid-template-columns: repeat(3, 1fr); gap: 25px; padding-left: 25px; }
-        .produto-card { background: #fff; color: #000; padding: 15px; text-align: center; border: 5px solid #000; }
-        .produto-card img { width: 100%; height: 200px; object-fit: contain; }
+        /* CONTROLE DE FILTRO E BOTÃO */
+        .controles-vitrine { padding: 15px 15px 5px 15px; display: flex; justify-content: space-between; align-items: center; }
+        .btn-abrir-filtro { background: #d10000; color: #fff; border: 2px solid #fff; padding: 10px 20px; font-weight: 900; cursor: pointer; transform: skewX(-10deg); }
         
-        .tamanhos-box { display: flex; justify-content: center; gap: 5px; margin: 10px 0; }
-        .btn-t { border: 2px solid #000; background: #fff; font-size: 11px; cursor: pointer; padding: 5px 8px; font-weight: 900; }
+        /* MODAL DE FILTROS */
+        .modal-filtro { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); z-index: 200; display: flex; flex-direction: column; justify-content: center; align-items: center; }
+        .modal-filtro-conteudo { background: #fff; color: #000; padding: 25px; border: 5px solid #d10000; width: 80%; max-width: 300px; text-align: center; }
+        .modal-filtro-conteudo h3 { margin-top: 0; font-size: 20px; border-bottom: 3px solid #000; padding-bottom: 10px; }
+        .modal-filtro-conteudo button { width: 100%; padding: 12px; margin: 8px 0; background: #000; color: #fff; border: none; font-weight: bold; cursor: pointer; font-size: 14px; }
+        .modal-filtro-conteudo button.btn-sair-filtro { background: #d10000; margin-top: 15px; }
+
+        /* VITRINE E PRODUTOS (LAYOUT CELULAR RESPONSIVO) */
+        .vitrine-container { padding: 15px; }
+        .grid-produtos { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 15px; width: 100%; box-sizing: border-box; }
+        .produto-card { background: #fff; color: #000; padding: 10px; text-align: center; border: 4px solid #000; display: flex; flex-direction: column; justify-content: space-between; box-sizing: border-box; }
+        
+        /* CORREÇÃO DAS IMAGENS DAS CAMISAS */
+        .produto-card img { width: 100%; height: 160px; object-fit: contain; background: #f9f9f9; border-bottom: 2px solid #000; margin-bottom: 8px; }
+        .produto-card h4 { margin: 5px 0; font-size: 13px; font-weight: bold; line-height: 1.2; }
+        
+        .tamanhos-box { display: flex; justify-content: center; gap: 3px; margin: 8px 0; }
+        .btn-t { border: 2px solid #000; background: #fff; font-size: 10px; cursor: pointer; padding: 4px 6px; font-weight: 900; }
         .btn-t.sel { background: #d10000; color: #fff; border-color: #d10000; }
-        .btn-comprar { background: #000; color: #fff; border: none; padding: 12px; width: 100%; cursor: pointer; font-weight: 900; }
+        .btn-comprar { background: #000; color: #fff; border: none; padding: 10px; width: 100%; cursor: pointer; font-weight: 900; font-size: 12px; }
 
-        #secao-carrinho { padding: 40px; max-width: 1100px; margin: auto; }
-        .carrinho-grid { display: grid; grid-template-columns: 1.5fr 1fr; gap: 40px; }
-        .resumo-checkout { background: #fff; color: #000; padding: 30px; border: 10px solid #000; box-shadow: 15px 15px 0 #ffffff; }
-        .input-endereco { width: 100%; padding: 15px; margin: 15px 0; border: 4px solid #000; font-weight: bold; box-sizing: border-box; }
-
+        /* CHECKOUT */
+        #secao-carrinho { padding: 15px; max-width: 100%; box-sizing: border-box; }
+        .carrinho-grid { display: flex; flex-direction: column; gap: 20px; }
+        .resumo-checkout { background: #fff; color: #000; padding: 20px; border: 6px solid #000; box-shadow: 8px 8px 0 #ffffff; }
+        .input-endereco { width: 100%; padding: 12px; margin: 10px 0; border: 3px solid #000; font-weight: bold; box-sizing: border-box; }
+        
         /* ITEM DO CARRINHO */
-        .carrinho-item { 
-            background: #1a1a1a; 
-            padding: 15px; 
-            margin-bottom: 10px; 
-            border-left: 5px solid #d10000; 
-            display: flex; 
-            justify-content: space-between; 
-            align-items: center; 
-            color: #fff;
-        }
-        .btn-remover-item { 
-            background: #d10000; 
-            color: #fff; 
-            border: 2px solid #fff; 
-            padding: 5px 10px; 
-            cursor: pointer; 
-            font-weight: bold; 
-            font-family: Arial, sans-serif;
-            font-size: 12px;
-        }
-        .btn-remover-item:hover { background: #fff; color: #d10000; border-color: #d10000; }
+        .carrinho-item { background: #1a1a1a; padding: 12px; margin-bottom: 10px; border-left: 5px solid #d10000; display: flex; justify-content: space-between; align-items: center; color: #fff; font-size: 12px; }
+        .btn-remover-item { background: #d10000; color: #fff; border: 1px solid #fff; padding: 4px 8px; cursor: pointer; font-weight: bold; font-size: 11px; }
 
         /* NOTIFICAÇÃO FLUTUANTE */
-        .notificacao { 
-            position: fixed; 
-            top: -120px; 
-            left: 50%; 
-            transform: translateX(-50%); 
-            background: #000000;        
-            color: #ffffff;             
-            padding: 25px 65px;         
-            border: 5px solid #ffffff;  
-            z-index: 10000; 
-            transition: 0.5s; 
-            font-family: Arial, sans-serif; 
-            font-size: 22px;            
-            font-weight: bold;
-            text-align: center;
-            box-shadow: 0px 10px 30px rgba(0, 0, 0, 0.9);
-        }
-        .notificacao.ativo { top: 30px; }
+        .notificacao { position: fixed; top: -120px; left: 50%; transform: translateX(-50%); background: #000; color: #fff; padding: 15px 30px; border: 4px solid #fff; z-index: 10000; transition: 0.4s; font-size: 16px; font-weight: bold; text-align: center; width: 75%; max-width: 300px; }
+        .notificacao.ativo { top: 20px; }
 
         /* ACESSIBILIDADE */
-        .btn-acessibilidade-fixo {
-            position: fixed; bottom: 20px; right: 20px; z-index: 9999;
-            background: #d10000; color: #fff; border: 3px solid #fff;
-            width: 50px; height: 50px; border-radius: 0; font-weight: 900;
-            font-size: 24px; cursor: pointer; box-shadow: 5px 5px 0 #000;
-            clip-path: polygon(15% 0%, 100% 0%, 85% 100%, 0% 100%);
-            display: flex; justify-content: center; align-items: center;
-        }
-        .painel-acessibilidade {
-            position: fixed; bottom: 80px; right: 20px; z-index: 9998;
-            background: #fff; color: #000; border: 5px solid #000;
-            width: 280px; padding: 20px; box-shadow: 10px 10px 0 #000;
-            transform: scale(0); transform-origin: bottom right; transition: 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-        }
+        .btn-acessibilidade-fixo { position: fixed; bottom: 15px; right: 15px; z-index: 9999; background: #d10000; color: #fff; border: 2px solid #fff; width: 45px; height: 45px; font-weight: 900; font-size: 20px; cursor: pointer; display: flex; justify-content: center; align-items: center; }
+        .painel-acessibilidade { position: fixed; bottom: 70px; right: 15px; z-index: 9998; background: #fff; color: #000; border: 4px solid #000; width: 240px; padding: 15px; transform: scale(0); transform-origin: bottom right; transition: 0.3s; }
         .painel-acessibilidade.aberto { transform: scale(1); }
-        .switch-container { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; border-bottom: 2px dashed #000; padding-bottom: 10px; }
-        .switch { position: relative; display: inline-block; width: 50px; height: 26px; }
+        .switch-container { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; border-bottom: 2px dashed #000; padding-bottom: 8px; }
+        .switch { position: relative; display: inline-block; width: 45px; height: 22px; }
         .switch input { opacity: 0; width: 0; height: 0; }
         .slider { position: relative; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #ccc; transition: .3s; border: 2px solid #000; }
-        .slider:before { position: absolute; content: ""; height: 16px; width: 16px; left: 3px; bottom: 3px; background-color: #000; transition: .3s; }
+        .slider:before { position: absolute; content: ""; height: 14px; width: 14px; left: 2px; bottom: 2px; background-color: #000; transition: .3s; }
         input:checked + .slider { background-color: #d10000; }
-        input:checked + .slider:before { transform: translateX(24px); background-color: #fff; }
-        
-        .p5-info-box { background: #000; color: #fff; padding: 10px; font-size: 12px; font-family: sans-serif; font-weight: bold; line-height: 1.4; border: 1px solid #fff; }
+        input:checked + .slider:before { transform: translateX(21px); background-color: #fff; }
+        .p5-info-box { background: #000; color: #fff; padding: 8px; font-size: 11px; font-weight: bold; line-height: 1.3; border: 1px solid #fff; }
         #vlibras-container { display: none; }
     </style>
 </head>
@@ -148,17 +108,15 @@
     
     <div id="painel-libras" class="painel-acessibilidade">
         <div class="switch-container">
-            <span style="font-weight: 900; font-size: 14px;">ATIVAR VLIBRAS?</span>
+            <span style="font-weight: 900; font-size: 12px;">ATIVAR VLIBRAS?</span>
             <label class="switch">
                 <input type="checkbox" id="chk-vlibras" onchange="alternarWidgetLibras()">
                 <span class="slider"></span>
             </label>
         </div>
         <div class="p5-info-box">
-            <p style="color: #ffffff; margin-top: 0; font-size: 12px; font-weight: 900; text-decoration: underline;">O QUE É O VLIBRAS?</p>
-            É uma ferramenta pública que traduz conteúdos digitais para a Língua Brasileira de Sinais (Libras).
-            <p style="color: #ffffff; margin-bottom: 3px; font-size: 12px; font-weight: 900; text-decoration: underline;">COMO USAR:</p>
-            Ative a chave e clique sobre o avatar para traduzir os blocos de texto selecionados.
+            <p style="color: #ffffff; margin-top: 0; font-size: 11px; font-weight: 900; text-decoration: underline;">O QUE É O VLIBRAS?</p>
+            Tradução de conteúdos digitais para a Língua Brasileira de Sinais.
         </div>
     </div>
 
@@ -183,7 +141,7 @@
 
     <section id="tela-admin" class="hidden">
         <nav role="navigation" aria-label="Menu de Administração">
-            <div style="padding:20px; background:#000; color:#fff; font-family:'Persona5Menu';">PHANTOM ADMIN</div>
+            <div style="padding:10px; background:#000; color:#fff; font-family:'Persona5Menu'; text-align:center;">PHANTOM ADMIN</div>
             <ul>
                 <li id="li-estoque" class="active-tab" onclick="mudarAba('estoque')">Estoque</li>
                 <li id="li-pedidos" onclick="mudarAba('pedidos')">Pedidos</li>
@@ -192,23 +150,23 @@
         </nav>
         <main class="admin-content">
             <div id="aba-estoque" class="tab-content active">
-                <h1 style="color:#ffffff; font-family: Arial, sans-serif; font-weight: 900; text-transform: uppercase; border-bottom: 3px solid #fff; padding-bottom: 10px;">Controle de Carga</h1>
-                <div style="background:#1a1a1a; padding:25px; border:3px solid #ffffff;">
-                    <table>
-                        <thead><tr><th>Item</th><th>Quantidade</th><th>Status</th></tr></thead>
+                <h2 style="color:#ffffff; font-weight: 900; text-transform: uppercase; border-bottom: 2px solid #fff; padding-bottom: 5px; margin-top:0;">Controle de Carga</h2>
+                <div style="background:#1a1a1a; padding:10px; border:2px solid #ffffff; overflow-x:auto;">
+                    <table style="width:100%; font-size:12px;">
+                        <thead><tr><th>Item</th><th>Qtd</th><th>Salvar</th></tr></thead>
                         <tbody id="tabela-admin-corpo"></tbody>
                     </table>
                 </div>
 
                 <div class="log-container">
-                    <h3 style="color:#ffffff; font-family: Arial, sans-serif; margin-top:0; font-size:18px; letter-spacing:1px; font-weight: bold;">DOCUMENTAÇÃO DE MOVIMENTAÇÕES (LOGS)</h3>
+                    <h4 style="color:#ffffff; margin-top:0; font-size:14px; font-weight: bold;">LOGS DE MOVIMENTAÇÃO</h4>
                     <div id="admin-logs-lista" class="log-lista">
-                        <div class="log-item" id="log-vazio">Nenhuma movimentação documentada nesta sessão.</div>
+                        <div class="log-item" id="log-vazio">Nenhuma movimentação documentada.</div>
                     </div>
                 </div>
             </div>
             <div id="aba-pedidos" class="tab-content">
-                <h1 style="color:#ffffff; font-family: Arial, sans-serif; font-weight: 900; text-transform: uppercase; border-bottom: 3px solid #fff; padding-bottom: 10px;">Pedidos</h1>
+                <h2 style="color:#ffffff; font-weight: 900; text-transform: uppercase; border-bottom: 2px solid #fff; padding-bottom: 5px; margin-top:0;">Pedidos</h2>
                 <div id="lista-pedidos-admin" role="list" aria-label="Lista de Pedidos"></div>
             </div>
         </main>
@@ -217,32 +175,40 @@
     <section id="tela-cliente" class="hidden">
         <header>
             <div class="logo">PHANTOM WEAR</div>
-            <div class="cart-status" onclick="abrirCarrinho()" role="button" aria-label="Abrir carrinho de compras">CARRINHO [ <span id="cart-count" aria-live="polite">0</span> ]</div>
+            <div class="cart-status" onclick="abrirCarrinho()" role="button" aria-label="Abrir carrinho">CARRINHO [<span id="cart-count">0</span>]</div>
         </header>
+
+        <div class="controles-vitrine">
+            <button class="btn-abrir-filtro" onclick="abrirModalFiltro()">🔍 FILTRAR</button>
+            <span id="categoria-ativa-txt" style="font-size:12px; font-weight:bold; color:#d10000;">[ TODOS ]</span>
+        </div>
+
+        <div id="modal-filtro" class="modal-filtro hidden">
+            <div class="modal-filtro-conteudo">
+                <h3>CATEGORIAS</h3>
+                <button onclick="aplicarFiltroEFechar('TODOS')">TODOS OS PRODUTOS</button>
+                <button onclick="aplicarFiltroEFechar('Camiseta')">CAMISETAS</button>
+                <button onclick="aplicarFiltroEFechar('Moletom')">MOLETONS</button>
+                <button onclick="deslogarGeral()" style="background:#ff4d4d; margin-top:15px;">SAIR DA CONTA</button>
+                <button class="btn-sair-filtro" onclick="fecharModalFiltro()">VOLTAR</button>
+            </div>
+        </div>
+
         <div id="vitrine-principal" class="vitrine-container">
-            <aside style="width:200px" role="search" aria-label="Filtros de categoria">
-                <h3 style="color:#ffffff; font-family: Arial, sans-serif; font-weight: bold; border-bottom: 2px solid #fff; padding-bottom: 5px;">FILTRAR</h3>
-                <ul style="list-style:none; padding:0">
-                    <li onclick="filtrar('TODOS')" style="cursor:pointer; padding:10px;">TODOS</li>
-                    <li onclick="filtrar('Camiseta')" style="cursor:pointer; padding:10px;">CAMISETAS</li>
-                    <li onclick="filtrar('Moletom')" style="cursor:pointer; padding:10px;">MOLETONS</li>
-                    <li onclick="deslogarGeral()" style="cursor:pointer; padding:10px; color:#ff4d4d; margin-top:20px; border-top: 1px dashed #444; font-weight:bold;">SAIR</li>
-                </ul>
-            </aside>
             <main class="grid-produtos" id="vitrine-produtos" role="list" aria-label="Vitrine de Roupas"></main>
         </div>
 
         <div id="secao-carrinho" class="hidden">
-            <h1 style="font-family: Arial, sans-serif; font-weight: 900; color:#ffffff; font-size:45px; border-bottom: 4px solid #fff; padding-bottom: 10px; margin-bottom: 20px;">CHECKOUT</h1>
+            <h2 style="font-weight: 900; color:#ffffff; font-size:30px; border-bottom: 3px solid #fff; padding-bottom: 5px; margin-top:0;">CHECKOUT</h2>
             <div class="carrinho-grid">
-                <div id="itens-carrinho-lista" role="list" aria-label="Itens no carrinho"></div>
+                <div id="itens-carrinho-lista" role="list"></div>
                 <div class="resumo-checkout">
-                    <h2 style="font-family: Arial, sans-serif; font-weight: bold; letter-spacing: -1px;">RESUMO</h2>
-                    <div id="resumo-total" style="font-size:30px; font-weight:900; margin:20px 0;" aria-live="polite">TOTAL: R$ 0,00</div>
+                    <h3 style="margin-top:0;">RESUMO</h3>
+                    <div id="resumo-total" style="font-size:22px; font-weight:900; margin:15px 0;">TOTAL: R$ 0,00</div>
                     <p><label for="campo-endereco">ENDEREÇO DE ENTREGA:</label></p>
-                    <textarea id="campo-endereco" class="input-endereco" rows="3" placeholder="Digite o endereço completo para entrega"></textarea>
-                    <button class="btn-comprar" onclick="finalizarPedido()" style="padding:20px;">FINALIZAR PEDIDO</button>
-                    <p onclick="voltarVitrine()" style="text-decoration:underline; cursor:pointer; text-align:center; margin-top:20px;">VOLTAR</p>
+                    <textarea id="campo-endereco" class="input-endereco" rows="3" placeholder="Rua, Número, Bairro..."></textarea>
+                    <button class="btn-comprar" onclick="finalizarPedido()" style="padding:15px;">FINALIZAR PEDIDO</button>
+                    <p onclick="voltarVitrine()" style="text-decoration:underline; cursor:pointer; text-align:center; margin-top:15px; font-size:13px;">VOLTAR</p>
                 </div>
             </div>
         </div>
@@ -260,7 +226,6 @@
         let selecoesTamanho = {};
         let mudancasLocais = {};
         let cachePedidos = [];
-        
         let modoCadastro = false;
 
         function togglePainelAcessivel() {
@@ -270,100 +235,69 @@
         function alternarWidgetLibras() {
             const ativo = document.getElementById('chk-vlibras').checked;
             const container = document.getElementById('vlibras-container');
-            if (ativo) { 
-                container.style.display = "block"; 
-                mostrarNotificacao("VLIBRAS ATIVADO!"); 
-            } else { 
-                container.style.display = "none"; 
-                mostrarNotificacao("VLIBRAS DESATIVADO"); 
-            }
+            container.style.display = ativo ? "block" : "none";
+            mostrarNotificacao(ativo ? "VLIBRAS ATIVADO!" : "VLIBRAS DESATIVADO");
         }
 
         function alternarModoLogin() {
             modoCadastro = !modoCadastro;
-            const titulo = document.getElementById('titulo-login');
-            const botao = document.getElementById('btn-acao-login');
-            const link = document.getElementById('link-alternar');
-            
+            document.getElementById('titulo-login').innerText = modoCadastro ? "CADASTRO" : "LOGIN";
+            document.getElementById('btn-acao-login').innerText = modoCadastro ? "CADASTRAR-SE" : "INFILTRAR-SE";
+            document.getElementById('link-alternar').innerText = modoCadastro ? "Já tenho conta (Voltar)" : "Criar Conta";
             document.getElementById('login-email').value = "";
             document.getElementById('login-senha').value = "";
-
-            if (modoCadastro) {
-                titulo.innerText = "CADASTRO";
-                botao.innerText = "CADASTRAR-SE";
-                link.innerText = "Já tenho conta (Voltar)";
-            } else {
-                titulo.innerText = "LOGIN";
-                botao.innerText = "INFILTRAR-SE";
-                link.innerText = "Criar Conta";
-            }
         }
 
         function executarAcaoLogin() {
-            if (modoCadastro) {
-                cadastrarUsuario();
-            } else {
-                autenticar();
-            }
+            if (modoCadastro) cadastrarUsuario();
+            else autenticar();
         }
 
         function cadastrarUsuario() {
             const email = document.getElementById('login-email').value.trim();
             const senha = document.getElementById('login-senha').value.trim();
-
-            if (!email || !senha) {
-                alert("Preencha todos os campos para realizar o cadastro!");
-                return;
-            }
-
+            if (!email || !senha) return alert("Preencha todos os campos!");
             localStorage.setItem(`user_${email}`, senha);
             mostrarNotificacao("CADASTRADO COM SUCESSO!");
-            
             setTimeout(() => {
                 alternarModoLogin();
                 document.getElementById('login-email').value = email;
             }, 1200);
         }
 
-        // Função segura para deslogar e limpar os inputs de acesso
         function deslogarGeral() {
             document.getElementById('tela-admin').classList.add('hidden');
             document.getElementById('tela-cliente').classList.add('hidden');
             document.getElementById('secao-carrinho').classList.add('hidden');
             document.getElementById('vitrine-principal').classList.remove('hidden');
-            
-            // Limpa dados temporários da sessão anterior
+            fecharModalFiltro();
             carrinho = [];
             selecoesTamanho = {};
             atualizarContadorCarrinho();
-
             document.getElementById('login-email').value = "";
             document.getElementById('login-senha').value = "";
-            
-            if (modoCadastro) alternarModoLogin(); // Força voltar para modo Login se estiver em Cadastro
-            
+            if (modoCadastro) alternarModoLogin();
             document.getElementById('tela-login').classList.remove('hidden');
             mostrarNotificacao("SESSÃO ENCERRADA");
         }
 
         async function carregarDados() {
-            const res = await fetch(`${URL_API}/produtos`);
-            produtos = await res.json();
-            renderVitrine(produtos);
-            renderAdmin();
+            try {
+                const res = await fetch(`${URL_API}/produtos`);
+                produtos = await res.json();
+                renderVitrine(produtos);
+                renderAdmin();
+            } catch (e) {
+                console.error("Erro ao carregar produtos:", e);
+            }
         }
 
         function autenticar() {
             const email = document.getElementById('login-email').value.trim();
             const senha = document.getElementById('login-senha').value.trim();
-
-            if (!email || !senha) {
-                alert("Insira e-mail e senha!");
-                return;
-            }
+            if (!email || !senha) return alert("Insira e-mail e senha!");
 
             const senhaSalva = localStorage.getItem(`user_${email}`);
-            
             const credenciaisPadraoValidas = (email === "empresa@phantom.com" && senha === "123") || (email === "cliente@gmail.com" && senha === "123");
             const credenciaisNovasValidas = (senhaSalva !== null && senhaSalva === senha);
 
@@ -380,25 +314,30 @@
             }
         }
 
+        function abrirModalFiltro() { document.getElementById('modal-filtro').classList.remove('hidden'); }
+        function fecharModalFiltro() { document.getElementById('modal-filtro').classList.add('hidden'); }
+        function aplicarFiltroEFechar(cat) {
+            filtrar(cat);
+            document.getElementById('categoria-ativa-txt').innerText = `[ ${cat.toUpperCase()} ]`;
+            fecharModalFiltro();
+        }
+
         function renderAdmin() {
             const tbody = document.getElementById('tabela-admin-corpo');
             tbody.innerHTML = produtos.map(p => {
                 const qtdMostrada = mudancasLocais[p.id] !== undefined ? mudancasLocais[p.id] : p.estoque;
                 const mudou = mudancasLocais[p.id] !== undefined && mudancasLocais[p.id] !== p.estoque;
-                const statusTexto = qtdMostrada <= 5 ? 'NÍVEL CRÍTICO' : 'ESTÁVEL';
                 return `
                 <tr>
-                    <td style="display: flex; align-items: center; gap: 15px;">
-                        <img src="${p.img}" alt="Miniatura de ${p.nome}" style="width: 40px; height: 40px; object-fit: contain; background: #eee; border: 2px solid #000;" onerror="this.src='https://via.placeholder.com/40x40?text=Item'">
-                        <span>${p.nome}</span>
+                    <td><b>${p.nome}</b></td>
+                    <td>
+                        <button class="btn-qty" onclick="ajustarLocal(${p.id}, -1)">-</button>
+                        <span>${qtdMostrada}</span>
+                        <button class="btn-qty" onclick="ajustarLocal(${p.id}, 1)">+</button>
                     </td>
                     <td>
-                        <button class="btn-qty" onclick="ajustarLocal(${p.id}, -1)" aria-label="Diminuir estoque de ${p.nome}">-</button>
-                        <span style="margin:0 10px; font-weight:bold;">${qtdMostrada}</span>
-                        <button class="btn-qty" onclick="ajustarLocal(${p.id}, 1)" aria-label="Aumentar estoque de ${p.nome}">+</button>
-                        <button class="btn-save-stock" id="save-${p.id}" style="display:${mudou?'inline-block':'none'}" onclick="salvarEstoque(${p.id})">SALVAR</button>
+                        <button class="btn-save-stock" id="save-${p.id}" style="display:${mudou?'inline-block':'none'}" onclick="salvarEstoque(${p.id})">OK</button>
                     </td>
-                    <td style="color:${qtdMostrada<=5?'#ff4d4d':'#fff'}">${statusTexto}</td>
                 </tr>`;
             }).join('');
         }
@@ -434,21 +373,7 @@
             const hora = agora.toLocaleTimeString('pt-BR');
             const diff = novo - antigo;
             const sinal = diff > 0 ? `+${diff}` : `${diff}`;
-            const classeBadge = diff > 0 ? 'badge-subiu' : 'badge-desceu';
-            
-            let tagHtml = (origem === "MANUAL") 
-                ? `<span class="tag-tipo manual">AJUSTE MANUAL</span>` 
-                : `<span class="tag-tipo pedido">PEDIDO #${origem}</span>`;
-
-            const itemLogHtml = `
-                <div class="log-item">
-                    <span class="timestamp">[${hora}]</span>
-                    ${tagHtml}
-                    O item <span class="destaque">${nomeProduto}</span> mudou de <span class="destaque">${antigo}</span> para <span class="destaque">${novo}</span> 
-                    (<span class="${classeBadge}">${sinal} un.</span>).
-                </div>
-            `;
-
+            const itemLogHtml = `<div class="log-item">[${hora}] ${nomeProduto}: ${antigo} ➔ ${novo} (${sinal})</div>`;
             const lista = document.getElementById('admin-logs-lista');
             const vazio = document.getElementById('log-vazio');
             if (vazio) vazio.remove();
@@ -468,67 +393,41 @@
             cachePedidos = await res.json();
             const div = document.getElementById('lista-pedidos-admin');
             div.innerHTML = cachePedidos.map(p => `
-                <div class="order-card" role="listitem">
-                    <div><b>Pedido #${p.id}</b> - Status: ${p.status}<br><small>Itens: ${p.itens.map(i=>i.nome).join(', ')}</small><br>Destino: ${p.endereco}</div>
-                    <div>${p.status === 'PENDENTE' ? `<button class="btn-entregar" onclick="baixarPedido(${p.id})">ENVIAR E BAIXAR</button>` : 'ENVIADO'}</div>
+                <div class="order-card">
+                    <div><b>Pedido #${p.id}</b> (${p.status})<br><small>${p.itens.map(i=>i.nome).join(', ')}</small><br>End: ${p.endereco}</div>
+                    <div>${p.status === 'PENDENTE' ? `<button class="btn-entregar" onclick="baixarPedido(${p.id})">ENVIAR</button>` : 'ENVIADO'}</div>
                 </div>`).join('');
         }
 
         async function baixarPedido(id) {
-            const pedidoAlvo = cachePedidos.find(p => p.id === id);
-            
-            if (pedidoAlvo) {
-                const contagemItens = {};
-                pedidoAlvo.itens.forEach(i => {
-                    contagemItens[i.id] = (contagemItens[i.id] || 0) + 1;
-                });
-
-                const res = await fetch(`${URL_API}/pedidos/${id}/entregar`, { method: 'POST' });
-                if (res.ok) {
-                    Object.keys(contagemItens).forEach(prodId => {
-                        const idNum = parseInt(prodId);
-                        const produtoNoEstoque = produtos.find(x => x.id === idNum);
-                        if (produtoNoEstoque) {
-                            const qtdRetirada = contagemItens[prodId];
-                            const antigoEstoque = produtoNoEstoque.estoque;
-                            const novoEstoque = Math.max(0, antigoEstoque - qtdRetirada);
-
-                            adicionarLogAuditoria(id, produtoNoEstoque.nome, antigoEstoque, novoEstoque);
-                        }
-                    });
-
-                    mostrarNotificacao("BAIXA REALIZADA!");
-                    carregarPedidos();
-                    await carregarDados();
-                }
+            const res = await fetch(`${URL_API}/pedidos/${id}/entregar`, { method: 'POST' });
+            if (res.ok) {
+                mostrarNotificacao("PEDIDO ENVIADO!");
+                carregarPedidos();
+                carregarDados();
             }
         }
 
         function renderVitrine(lista) {
             const v = document.getElementById('vitrine-produtos');
-            v.innerHTML = lista.map(p => {
-                const descricaoAcessivel = p.descricaoAcessivel || `${p.nome}. Categoria: ${p.cat}.`;
-                return `
-                <div class="produto-card" role="listitem">
-                    <img src="${p.img}" alt="${descricaoAcessivel}" aria-describedby="preco-${p.id}">
+            v.innerHTML = lista.map(p => `
+                <div class="produto-card">
+                    <img src="${p.img}" alt="${p.nome}" onerror="this.src='https://via.placeholder.com/150?text=Sem+Foto'">
                     <h4>${p.nome}</h4>
-                    <p id="preco-${p.id}">R$ ${p.preco.toFixed(2)}</p>
-                    <div class="tamanhos-box" id="tams-${p.id}" role="group" aria-label="Escolha o tamanho para ${p.nome}">
+                    <p style="font-size:14px; font-weight:bold; margin:3px 0;">R$ ${p.preco.toFixed(2)}</p>
+                    <div class="tamanhos-box" id="tams-${p.id}">
                         <button class="btn-t" onclick="setTam(${p.id}, 'P', this)">P</button>
                         <button class="btn-t" onclick="setTam(${p.id}, 'M', this)">M</button>
                         <button class="btn-t" onclick="setTam(${p.id}, 'G', this)">G</button>
                     </div>
                     <button class="btn-comprar" onclick="addCarrinho(${p.id})">ADICIONAR</button>
-                </div>`;
-            }).join('');
+                </div>`).join('');
         }
 
         function setTam(id, tam, btn) {
             selecoesTamanho[id] = tam;
-            document.getElementById('tams-'+id).querySelectorAll('.btn-t').forEach(b => {
-                b.classList.remove('sel'); b.removeAttribute('aria-current');
-            });
-            btn.classList.add('sel'); btn.setAttribute('aria-current', 'true');
+            document.getElementById('tams-'+id).querySelectorAll('.btn-t').forEach(b => b.classList.remove('sel'));
+            btn.classList.add('sel');
         }
 
         function addCarrinho(id) {
@@ -553,14 +452,13 @@
         function renderizarItensCarrinho() {
             const lista = document.getElementById('itens-carrinho-lista');
             if (carrinho.length === 0) {
-                lista.innerHTML = `<div style="text-align:center; padding:20px; color:#aaa;">Seu carrinho está vazio.</div>`;
+                lista.innerHTML = `<div style="text-align:center; padding:15px; color:#aaa;">Carrinho vazio.</div>`;
             } else {
                 lista.innerHTML = carrinho.map((item, index) => `
-                    <div class="carrinho-item" role="listitem">
-                        <div>${item.nome} (Tamanho: ${item.tam}) - R$ ${item.preco.toFixed(2)}</div>
-                        <button class="btn-remover-item" onclick="removerDoCarrinho(${index})" aria-label="Remover ${item.nome} do carrinho">REMOVER</button>
-                    </div>
-                `).join('');
+                    <div class="carrinho-item">
+                        <div>${item.nome} (${item.tam}) - R$ ${item.preco.toFixed(2)}</div>
+                        <button class="btn-remover-item" onclick="removerDoCarrinho(${index})">X</button>
+                    </div>`).join('');
             }
             const total = carrinho.reduce((a, b) => a + b.preco, 0);
             document.getElementById('resumo-total').innerText = `TOTAL: R$ ${total.toFixed(2)}`;
@@ -568,33 +466,28 @@
 
         function abrirCarrinho() {
             document.getElementById('vitrine-principal').classList.add('hidden');
+            document.querySelector('.controles-vitrine').classList.add('hidden');
             document.getElementById('secao-carrinho').classList.remove('hidden');
             renderizarItensCarrinho();
         }
 
         async function finalizarPedido() {
             const end = document.getElementById('campo-endereco').value;
-            if(!end || carrinho.length === 0) return alert("Erro no checkout!");
+            if(!end || carrinho.length === 0) return alert("Preencha o endereço!");
             const res = await fetch(`${URL_API}/pedidos`, {
                 method: 'POST',
                 headers: {'Content-Type': 'application/json'},
                 body: JSON.stringify({ itens: carrinho, endereco: end, total: carrinho.reduce((a,b)=>a+b.preco,0) })
             });
-            
-            // ALTERADO: Fluxo de checkout ajustado para não resetar a sessão do cliente
             if(res.ok) { 
                 mostrarNotificacao("PEDIDO REALIZADO!"); 
-                
-                // Limpa o carrinho local e o endereço digitado
                 carrinho = [];
                 document.getElementById('campo-endereco').value = "";
                 atualizarContadorCarrinho();
-                
-                // Redireciona de volta para a vitrine logada após 2 segundos
                 setTimeout(() => {
                     voltarVitrine();
-                    carregarDados(); // Atualiza estoque na vitrine caso tenha mudado
-                }, 2000);
+                    carregarDados();
+                }, 1800);
             }
         }
 
@@ -605,6 +498,7 @@
 
         function voltarVitrine() {
             document.getElementById('vitrine-principal').classList.remove('hidden');
+            document.querySelector('.controles-vitrine').classList.remove('hidden');
             document.getElementById('secao-carrinho').classList.add('hidden');
         }
 
@@ -612,7 +506,7 @@
             const n = document.getElementById('notificacao');
             n.innerText = texto; 
             n.classList.add('ativo');
-            setTimeout(() => n.classList.remove('ativo'), 2500);
+            setTimeout(() => n.classList.remove('ativo'), 2200);
         }
     </script>
 </body>
